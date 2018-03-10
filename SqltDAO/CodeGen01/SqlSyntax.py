@@ -138,7 +138,7 @@ class SqliteCrud:
         result += self.level.print("line = fh.readline().strip()")
         result += self.level.print("if hasHeader is True:")
         self.level.inc()
-        result += self.level.print("line = fh.readline()")
+        result += self.level.print("line = fh.readline().strip()")
         self.level.dec()
         result += self.level.print("while len(line) is not 0:")
         self.level.inc()

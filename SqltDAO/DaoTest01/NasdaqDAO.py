@@ -69,7 +69,7 @@ class NasdaqDAO:
             with open(data_file) as fh:
                 line = fh.readline().strip()
                 if hasHeader is True:
-                    line = fh.readline()
+                    line = fh.readline().strip()
                 while len(line) is not 0:
                     dao.insert(line.split(sep))
                     line = fh.readline().strip()
