@@ -1,5 +1,5 @@
 from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.CodeGen01.GenNasdaq import DaoGen
+from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 test = DaoGen()
 

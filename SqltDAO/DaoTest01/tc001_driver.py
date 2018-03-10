@@ -12,5 +12,14 @@ test.delete(1)
 print('*' * 10)
 for row in test.select("Select * from " + test.table_name):
     print(row)
+
+if TC001.Import(test) is False:
+    print("Regression: Unable to import data.")
+else:
+    print('*' * 10)
+    for row in test.select("Select * from " + test.table_name):
+        print(row)
+    print("Total is:", test.count())
+
 test.drop_table()
 test.close()

@@ -15,10 +15,10 @@ class SqliteCrud:
         self.fields = fields
         self.level = CodeLevel()
 
-    def code_class_template(self):
+    def code_class_template(self, data_file, sep=','):
         self.level.set(0)
         result = self.level.print("import sqlite3\n\n\nclass " + self.order.class_name + ":")
-        result += self.level.print("\n")
+        result += self.level.print("")
 
         self.level.inc()
         result += self.level.print("def __init__(self):")
@@ -30,7 +30,7 @@ class SqliteCrud:
         result += self.level.print("self.bOpen = False")
         result += self.level.print("self.fields = " + str(self.fields))
         result += self.level.print("self.table_name = '" + self.order.table_name + "'")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def open(self):")
@@ -42,7 +42,7 @@ class SqliteCrud:
         result += self.level.print("self.bOpen = True")
         self.level.dec()
         result += self.level.print("return True")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def close(self):")
@@ -53,7 +53,7 @@ class SqliteCrud:
         result += self.level.print("self.bOpen = False")
         self.level.dec()
         result += self.level.print("return True")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def count(self):")
@@ -64,7 +64,7 @@ class SqliteCrud:
         result += self.level.print("return res.fetchone()[0]")
         self.level.dec()
         result += self.level.print("return -1")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def drop_table(self):")
@@ -75,7 +75,7 @@ class SqliteCrud:
         result += self.level.print("return True")
         self.level.dec()
         result += self.level.print("return False")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def create_table(self):")
@@ -86,7 +86,7 @@ class SqliteCrud:
         result += self.level.print("return True")
         self.level.dec()
         result += self.level.print("return False")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def insert(self, fields):")
@@ -97,7 +97,7 @@ class SqliteCrud:
         result += self.level.print("return True")
         self.level.dec()
         result += self.level.print("return False")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def delete(self, primary_key):")
@@ -108,7 +108,7 @@ class SqliteCrud:
         result += self.level.print("return True")
         self.level.dec()
         result += self.level.print("return False")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
         result += self.level.print("def select(self, sql_select):")
@@ -123,9 +123,42 @@ class SqliteCrud:
         self.level.dec()
         self.level.dec()
         result += self.level.print("return None")
-        result += self.level.print("\n")
+        result += self.level.print("")
         self.level.dec()
 
+        self.level.push()
+        result += self.level.print("@staticmethod")
+        result += self.level.print("def Import(dao, data_file='" + data_file + "', hasHeader=True, sep='" + sep + "'):")
+        self.level.inc()
+        result += self.level.print("try:")
+        self.level.inc()
+        result += self.level.print('# dao.open()')
+        result += self.level.print("with open(data_file) as fh:")
+        self.level.inc()
+        result += self.level.print("line = fh.readline().strip()")
+        result += self.level.print("if hasHeader is True:")
+        self.level.inc()
+        result += self.level.print("line = fh.readline()")
+        self.level.dec()
+        result += self.level.print("while len(line) is not 0:")
+        self.level.inc()
+        result += self.level.print("dao.insert(line.split(sep))")
+        result += self.level.print("line = fh.readline().strip()")
+        self.level.dec()
+        self.level.dec()
+        result += self.level.print("# dao.close()")
+        result += self.level.print("return True")
+        self.level.dec()
+        result += self.level.print("except:")
+        self.level.inc()
+        result += self.level.print("pass")
+        self.level.dec()
+        result += self.level.print("return False")
+        result += self.level.print("")
+        self.level.dec()
+        self.level.pop()
+
+        result += self.level.print("")
         return result
 
 
@@ -153,12 +186,3 @@ class SqliteCrud:
         result = result[0:len(result) - 1]
         result = result + ');'
         return result
-
-
-if __name__ == "__main__":
-    order = OrderClass()
-    fields = [('Symbol', 'TEXT'), ('SecurityName', 'TEXT'), ('MarketCategory', 'TEXT'), ('TestIssue', 'TEXT'), ('FinancialStatus', 'TEXT'), ('RoundLotSize', 'REAL'), ('ETF', 'TEXT'), ('NextShares', 'TEXT')]
-    test = SqliteCrud(order, fields)
-    # print(test.sql_create_table())
-    # print(test.sql_insert_row())
-    print(test.code_class_template())
