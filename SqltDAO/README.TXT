@@ -13,6 +13,6 @@ SqltDAO.DaoTest01.tc001_driver.py
 
 For Students:
 ============
-SqltDAO.CodeGen01.GenNasdaq.py
+SqltDAO.DaoTest01.GenNasdaq.py
 
 For an example of how to create an Order so as to generate your code!
