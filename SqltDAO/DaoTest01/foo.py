@@ -71,7 +71,8 @@ class TC001:
                 if hasHeader is True:
                     line = fh.readline().strip()
                 while len(line) is not 0:
-                    dao.insert(line.split(sep))
+                    if dao.insert(line.split(sep)) is False:
+                        return False
                     line = fh.readline().strip()
             # dao.close()
             return True
