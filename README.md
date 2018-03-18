@@ -11,7 +11,7 @@ Python 1000, Python 2000, and Python 3000 students who are
 participating in our Stock Market Resume-Builder will want 
 to look at the NASDAQ database generator:
 
-https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
+Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
 
 While a CSV file is incuded, note that the most recent set of tokens 
 can be downloaded from the stock exchange.
