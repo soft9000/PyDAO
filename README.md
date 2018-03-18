@@ -15,7 +15,7 @@ STOCK MARKET
 ------------
 Python 1000, Python 2000, and Python 3000 students who are 
 participating in our Stock Market Resume-Builder will want 
-to look at the NASDAQ database generator:
+to look at the NASDAQ database generator.
 
 Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
 
