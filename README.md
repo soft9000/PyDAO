@@ -22,6 +22,8 @@ Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/
 While a CSV file is incuded, note that the most recent set of tokens 
 can be downloaded from the stock exchange.
 
+VIDEO TRAINING
+--------------
 If you need to learn Python 3, then consider:
 
 https://www.udemy.com/python-1000
