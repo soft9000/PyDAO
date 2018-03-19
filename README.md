@@ -1,5 +1,7 @@
 # PyDAO
-Generate a Python Class to create a database from a CSV File.
+Generate a Python Class from a textual (CSV, TDF, Enpiped, etc.) data file. 
+
+The generated code can be used to import, as well as work with (C.R.U.D and query using SQL SELECTions, etc.) that data.
 
 EXAMPLE / TEST CASE
 -------------------
