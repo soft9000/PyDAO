@@ -1,7 +1,8 @@
 # PyDAO
 Generate a Python Class from a textual (CSV, TDF, Enpiped, etc.) data file. 
 
-The generated code can be used to import, as well as work with (C.R.U.D and query using SQL SELECTions, etc.) that data.
+The generated code can be used to import, as well as work with (C.R.U.D and query using SQL SELECTions, 
+etc.) that data.
 
 EXAMPLE / TEST CASE
 -------------------
@@ -21,8 +22,8 @@ to look at the NASDAQ database generator.
 
 Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
 
-While a CSV file is incuded, note that the most recent set of tokens 
-can be downloaded from the stock exchange.
+While that stock exchange's official pipe-delimited ("enpiped" ;) data file is incuded for demonstrative
+purposes, note that the most recent set of enpiped data tokens can be downloaded from the stock exchange.
 
 VIDEO TRAINING
 --------------
