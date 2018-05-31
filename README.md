@@ -1,8 +1,16 @@
 # PyDAO
-Generate a Python Class from a textual (CSV, TDF, Enpiped, etc.) data file. 
+Generate a Python Class from either a textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
 The generated code can be used to import, as well as work with (C.R.U.D and query using SQL SELECTions, 
 etc.) that data.
+
+
+API Example
+------------
+For those who would rather create the DAO directly, without using a data file:
+
+Fast-Schema Example: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/Demo123.py
+
 
 EXAMPLE / TEST CASE
 -------------------
@@ -11,7 +19,6 @@ Includes a classic "address book" example as a test case:
 Data Example: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/tc001_data.txt
 
 Generated Code: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/foo.py
-
 
 
 STOCK MARKET
@@ -24,6 +31,7 @@ Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/
 
 While that stock exchange's official pipe-delimited ("enpiped" ;) data file is incuded for demonstrative
 purposes, note that the most recent set of enpiped data tokens can be downloaded from the stock exchange.
+
 
 VIDEO TRAINING
 --------------
