@@ -4,6 +4,8 @@
 # 2018/03/08: Class Created
 
 import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenException

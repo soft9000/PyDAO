@@ -3,14 +3,28 @@
 # Author: Soft9000.com
 # 2018/11/24: Project Begun
 
+# Mission: Create a graphical user interface to PyDAO.
+# Status: WORK IN PROGRESS
+
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 from tkinter import *
+from SqltDAO.CodeGen01.OrderClass import OrderClass
+from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
+from SqltDAO.SchemaDef.Order import OrderDef
+
+from tkinter import messagebox
 
 class Main(Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ztitle = "PyDAO 0.001"
+        self.ztitle = "PyDAO 0.002"
         self.zsize = (600, 400)
+        self.project = None
+        self.schema_def = None
         self.zoptions = (
             ("Projects",    [("Open Project", self._on_open),
                              ("Save Project", self._on_save)]),
@@ -20,16 +34,33 @@ class Main(Tk):
             )
 
     def _on_open(self):
-        pass
+        from tkinter.filedialog import askopenfilename
+        self.project = askopenfilename()
+        self.title(self.project)
+        print(self.project)
+        zdef = OrderDef.LoadFile(self.project)
+        if not zdef:
+            messagebox.showerror(
+                "Schema File / Format Error",
+                "Unable to import " + self.project)
+        else:
+            self.schema_def = zdef
 
     def _on_save(self):
-        pass
+        if not self.schema_def:
+            messagebox.showerror(
+                "No Data",
+                "Schema Definition Required.")
+            return False
+        return True
 
     def _on_create(self):
-        pass
+        self._on_about()
 
     def _on_about(self):
-        pass
+        messagebox.showinfo(
+            self.ztitle,
+            "Work In Progress - Not For Use")
 
     def _set_frame(self):
         size = self.minsize()

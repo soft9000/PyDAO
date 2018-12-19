@@ -4,6 +4,10 @@
 # Author: Soft9000.com
 # 2018/05/31: Demonstration Created
 
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 from collections import OrderedDict
 
 # ######
@@ -69,8 +73,8 @@ except:
 # STEP 3: Enjoy!
 # ######
 
-from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud    
+from CodeGen01.OrderClass import OrderClass
+from CodeGen01.SqlSyntax import SqliteCrud    
 for line in tables:
     zname = line["ObjectName"]
     print("Table:", zname)

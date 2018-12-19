@@ -1,6 +1,10 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
 
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.CodeLevel import CodeLevel
 from SqltDAO.CodeGen01.DaoExceptions import GenOrder
@@ -9,8 +13,6 @@ from SqltDAO.CodeGen01.DaoExceptions import GenOrder
 class SqliteCrud:
 
     def __init__(self, order, fields):
-        if isinstance(order, OrderClass) is False:
-            raise GenOrder("Error: ClassOrder is missing")
         self.order = order
         self.fields = fields
         self.level = CodeLevel()
