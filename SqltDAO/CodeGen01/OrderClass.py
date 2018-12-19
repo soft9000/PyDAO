@@ -1,6 +1,7 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
 
+from collections import OrderedDict
 
 class OrderClass:
 
@@ -10,6 +11,23 @@ class OrderClass:
         self.class_name = class_name
         self._table_name = table_name
         self._file_name = file_name
+
+    def __dict__(self):
+        results = OrderedDict()
+        results['class_name']=self._class_name
+        results['table_name']=self._table_name
+        results['file_name']=self._file_name
+        results['db_name']=self._db_name
+        return results
+
+    def __iter__(self):
+        results = self.__dict__()
+        for key in results:
+            yield key, results[key]
+
+    def __str__(self):
+        results = self.__dict__()
+        return str(results)
 
     @staticmethod
     def Norm(name):

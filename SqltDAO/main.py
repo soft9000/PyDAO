@@ -11,11 +11,14 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from tkinter import *
+from tkinter import messagebox
+from tkinter.filedialog import askopenfilename
+
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.SchemaDef.Order import OrderDef
+from SqltDAO.CodeGen01.CodeGen import DaoGen
 
-from tkinter import messagebox
 
 class Main(Tk):
 
@@ -23,18 +26,19 @@ class Main(Tk):
         super().__init__(*args, **kwargs)
         self.ztitle = "PyDAO 0.002"
         self.zsize = (600, 400)
+        self.d2c = None
         self.project = None
         self.schema_def = None
         self.zoptions = (
             ("Projects",    [("Open Project", self._on_open),
                              ("Save Project", self._on_save)]),
-            ("Generate",    [("Create Code", self._on_create)]),
+            ("Generate",    [("Data2Code", self._on_d2c),
+                             ("Create Code", self._on_create)],),
             ("About",       [("About PyDao", self._on_about),
                              ("Quit", self.destroy)]),
             )
 
     def _on_open(self):
-        from tkinter.filedialog import askopenfilename
         self.project = askopenfilename()
         self.title(self.project)
         print(self.project)
@@ -56,6 +60,10 @@ class Main(Tk):
 
     def _on_create(self):
         self._on_about()
+
+    def _on_d2c(self):
+        from SqltDAO.Gui.Data2Code import Data2Code
+        Data2Code(self)
 
     def _on_about(self):
         messagebox.showinfo(
