@@ -8,7 +8,7 @@ class Income:
         self.conn = None
         self.curs = None
         self.bOpen = False
-        self.fields = [('FIPS,State,County,MedHHInc,PerCapitaInc,PovertyUnder18Pct,PovertyAllAgesPct,Deep_Pov_All,Deep_Pov_Children,PovertyUnder18Num,PovertyAllAgesNum', 'TEXT')]
+        self.fields = [('FIPS', 'INTEGER'), ('State', 'TEXT'), ('County', 'TEXT'), ('MedHHInc', 'INTEGER'), ('PerCapitaInc', 'INTEGER'), ('PovertyUnder18Pct', 'REAL'), ('PovertyAllAgesPct', 'STRING'), ('Deep_Pov_All', 'REAL'), ('Deep_Pov_Children', 'REAL'), ('PovertyUnder18Num', 'INTEGER'), ('PovertyAllAgesNum', 'INTEGER')]
         self.table_name = 'Income'
         
     def open(self):
@@ -38,13 +38,13 @@ class Income:
         
     def create_table(self):
         if self.bOpen:
-            self.curs.execute("CREATE TABLE IF NOT EXISTS Income(ID INTEGER PRIMARY KEY AUTOINCREMENT, FIPS,State,County,MedHHInc,PerCapitaInc,PovertyUnder18Pct,PovertyAllAgesPct,Deep_Pov_All,Deep_Pov_Children,PovertyUnder18Num,PovertyAllAgesNum TEXT);")
+            self.curs.execute("CREATE TABLE IF NOT EXISTS Income(ID INTEGER PRIMARY KEY AUTOINCREMENT, FIPS INTEGER, State TEXT, County TEXT, MedHHInc INTEGER, PerCapitaInc INTEGER, PovertyUnder18Pct REAL, PovertyAllAgesPct STRING, Deep_Pov_All REAL, Deep_Pov_Children REAL, PovertyUnder18Num INTEGER, PovertyAllAgesNum INTEGER);")
             return True
         return False
         
     def insert(self, fields):
         if self.bOpen:
-            self.curs.execute("INSERT INTO Income ( FIPS,State,County,MedHHInc,PerCapitaInc,PovertyUnder18Pct,PovertyAllAgesPct,Deep_Pov_All,Deep_Pov_Children,PovertyUnder18Num,PovertyAllAgesNum) VALUES (?);", fields)
+            self.curs.execute("INSERT INTO Income ( FIPS, State, County, MedHHInc, PerCapitaInc, PovertyUnder18Pct, PovertyAllAgesPct, Deep_Pov_All, Deep_Pov_Children, PovertyUnder18Num, PovertyAllAgesNum) VALUES (?,?,?,?,?,?,?,?,?,?,?);", fields)
             return True
         return False
         
@@ -63,7 +63,7 @@ class Income:
         return None
         
     @staticmethod
-    def Import(dao, data_file='C:/Users/Randall/Desktop/ProdSet/_etc/PyDAO-master.imda/SqltDAO/DataAsCSV/Income.csv', hasHeader=True, sep='","'):
+    def Import(dao, data_file='C:/Users/Randall/Desktop/ProdSet/_etc/PyDAO-master.imda/SqltDAO/DataAsCSV/Income.csv', hasHeader=True, sep=','):
         try:
             # dao.open()
             with open(data_file) as fh:
