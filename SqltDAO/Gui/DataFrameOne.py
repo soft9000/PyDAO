@@ -43,7 +43,6 @@ class DataFrameOne():
         self.frames["title"].pack(fill=BOTH)
         self.frames["root"].pack(fill=BOTH)
 
-
     def get_frames(self):
         ''' Returns a dictionary of the frames in-play. '''
         return self.frames
