@@ -7,6 +7,6 @@ class GenException(Exception):
         super().__init__(message)
 
 
-class GenOrder(Exception):
+class GenOrderError(Exception):
     def __init__(self, message):
         super().__init__(message)

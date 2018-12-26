@@ -2,6 +2,14 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
 
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+
+
+from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
+
+
 class SqlDetect:
 
     @staticmethod
@@ -83,12 +91,14 @@ class SqlDetect:
     def GetFields(file, sep=',', hasHeader=True, count=50):
         '''
         Success: A properly-ordered list() of (field-name, SQLite Type) values
-        Failure: Check for 'None'
+        Failure: Check for 'None' or Exception
         '''
         try:
             header = None
             with open(file) as fh:
                 line = fh.readline()
+                if not sep in line:
+                    raise GenOrderError("Field separator not in row.") 
                 if hasHeader is True:
                     header = SqlDetect.Norm(line, sep=sep)
                     line = fh.readline()
@@ -115,7 +125,9 @@ class SqlDetect:
                     line = fh.readline()
                 results = zip(SqlDetect.FixHeaderNames(header), saved)
                 return list(results)
-        except:
+        except GenOrderError as ex:
+            raise ex
+        except Exception:
             return None
 
 

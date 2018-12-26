@@ -7,7 +7,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.CodeLevel import CodeLevel
-from SqltDAO.CodeGen01.DaoExceptions import GenOrder
+from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
 
 class SqliteCrud:

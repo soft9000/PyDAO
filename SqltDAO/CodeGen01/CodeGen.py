@@ -8,7 +8,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.CodeGen01.DaoExceptions import GenException
+from SqltDAO.CodeGen01.DaoExceptions import *
 from SqltDAO.CodeGen01.SqlDetect import SqlDetect
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 

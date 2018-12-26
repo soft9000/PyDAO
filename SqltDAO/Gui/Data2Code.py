@@ -25,8 +25,8 @@ from collections import OrderedDict
 class Data2Code(simpledialog.Dialog):
 
     def __init__(self, parent):
+        self.gen_ok = False
         self.ztitle = "Data2Code 0.01"
-        self.bg = "Light Green"
         self.order_info = None
         self.file_name = StringVar()
         self.file_name.set(" ")
@@ -70,9 +70,15 @@ class Data2Code(simpledialog.Dialog):
 
     def apply(self):
         zsel = self.field_seps[int(self.field_sel.get())]
-        print(zsel)
         gen = DaoGen()
-        print(gen.write_code(self.order_info, self.file_name.get(), sep=zsel[2]))
+        try:
+            self.gen_ok = gen.write_code(
+                self.order_info,
+                self.file_name.get(), sep=zsel[2])
+            messagebox.showinfo("Success", "Code written to data folder.")
+        except Exception as ex:
+            self.gen_ok = False # Safe coding is no accident ...  ;-)
+            messagebox.showerror("Data File Error", ex)
 
     def body(self, zframe):
         self.title(self.ztitle)
@@ -80,32 +86,30 @@ class Data2Code(simpledialog.Dialog):
         self.attributes('-topmost',True)
         
         # File Selection
-        zfa = LabelFrame(zframe, text=" Table ", bg=self.bg)
+        zfa = LabelFrame(zframe, text=" Table ")
         
         Button(zfa,
                text=" ... ",
-               bg=self.bg,
                command=self.on_txt_fn
                ).grid(column=0, row=0)
-        Label(zfa, text="File: ",bg=self.bg).place(relx=0.1, rely=0.2)
+        Label(zfa, text="File: ").place(relx=0.1, rely=0.2)
         efn = Entry(zfa, width=50, textvariable=self.file_name)
         efn.place(relx=0.2, rely=0.2)
 
         # Radio Group
-        fradio = LabelFrame(zframe, text = " Field Sep", bg=self.bg)
+        fradio = LabelFrame(zframe, text = " Field Sep")
 
         for ss, key, ignored in self.field_seps:
             zrb = Radiobutton(
                 fradio, text=" " + key,
                 variable=self.field_sel,
-                value=ss,
-                bg=self.bg)
+                value=ss)
             zrb.grid(column=ss, row=0)
 
         # Order Metadata
-        zfb = LabelFrame(zframe, text=" Detection ", bg=self.bg)
+        zfb = LabelFrame(zframe, text=" Detection ")
         for ss, key in enumerate(self.display_info):
-            Label(zfb, text=key + ": ", bg=self.bg).grid(column=0, row=ss)
+            Label(zfb, text=key + ": ").grid(column=0, row=ss)
             Entry(zfb, width=50, state='readonly',
                   textvariable=self.display_info[key]).grid(column=1, row=ss)
 
@@ -119,7 +123,12 @@ class Data2Code(simpledialog.Dialog):
 
 if __name__ == "__main__":
     zroot = Tk()
-    Data2Code(parent=zroot)
+    zroot.tk_setPalette(background="Light Green")
+    zworks = Data2Code(parent=zroot)
     zroot.destroy()
+    if zworks.gen_ok:
+        print("gen okay")
+    else:
+        print("gen nokay")
 
 
