@@ -8,11 +8,11 @@
 
 import os
 import sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from collections import OrderedDict
-from SchemaDef.Table import TableDef
-from CodeGen01.OrderClass import OrderClass
+from SqltDAO.SchemaDef.Table import TableDef
+from SqltDAO.CodeGen01.OrderClass import OrderClass
 
 class OrderDef(OrderClass):
     ''' Basic Factory-Order definition, multiple tables.
@@ -125,17 +125,36 @@ class OrderDef(OrderClass):
                         result.zdict[key] = zdict[key]
                 return result
         except Exception as ex:
-            raise ex
             return False
+
+    @staticmethod
+    def Create(order_class, fields):
+        ''' Create and OrderDef from an OrderClass + Fields '''
+        if isinstance(order_class, OrderClass) is False:
+            raise TypeError("Instance of OrderClass is required.")
+        if not fields:
+            raise TypeError("No fields detected.")
+        result = OrderDef()
+        data = order_class.__dict__()
+        for key in data:
+            result.zdict[key] = data[key]
+        ztable = TableDef(name=order_class.table_name)
+        for field in fields:
+            ztable.add_field(field[0], field[1])
+        result.add_table(ztable)
+        return result
+        
     
     @staticmethod
-    def SaveFile(loaded_obj):
+    def SaveFile(loaded_obj, overwrite=False):
         ''' Will always STORE an instance using the auto-created file name.
         True / False returned.
         '''
         if not isinstance(loaded_obj, OrderDef):
             return False
-        return OrderDef.SaveAs(loaded_obj.get_file_name(), loaded_obj)
+        return OrderDef.SaveAs(
+            loaded_obj.get_file_name(),
+            loaded_obj, overwrite=overwrite)
     
     @staticmethod
     def SaveAs(fq_file, loaded_obj, overwrite=False):
@@ -164,9 +183,7 @@ class OrderDef(OrderClass):
 
             return os.path.exists(fq_file)
         except Exception as ex:
-            raise ex
-        
-        return False
+            return False
 
 
 if __name__ == "__main__":

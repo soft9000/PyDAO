@@ -20,13 +20,15 @@ from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.SchemaDef.Order import OrderDef
 from SqltDAO.CodeGen01.CodeGen import DaoGen
 
+from SqltDAO.Gui.Data2Code import Data2Code
+
 
 class Main(Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bSaved = False
-        self.ztitle = "PyDAO 0.002"
+        self.ztitle = "PyDAO 0.003"
         self.zsize = (600, 400)
         self.d2c = None
         self.project = None
@@ -35,8 +37,8 @@ class Main(Tk):
             ("Projects",    [("Open Project...", self._on_open),
                              ("Save Project...", self._on_save),
                              ("Create Code", self._on_create)],),
-            ("Generate",    [("Data2Code...", self._on_d2c),
-                             ("From Code...", self._on_code)]),
+            ("Tools",    [("Data2Code...", self._on_d2c),
+                             ("Data2Project...", self._on_d2p)]),
             ("About",       [("About PyDao...", self._on_about),
                              ("Quit", self.destroy)]),
             )
@@ -77,19 +79,16 @@ class Main(Tk):
             messagebox.showerror(
                 "No Data",
                 "Schema Definition Required.")
-            return False
-        
-        return True
-
-    def _on_code(self):
         self._on_about()
 
     def _on_create(self):
         self._on_about()
 
     def _on_d2c(self):
-        from SqltDAO.Gui.Data2Code import Data2Code
-        Data2Code(self)
+        Data2Code(self, verbose=True)
+
+    def _on_d2p(self):
+        Data2Code(self, gendef=True, verbose=True)
 
     def _on_about(self):
         messagebox.showinfo(

@@ -4,7 +4,7 @@
 # 2018/12/19: Project Begun
 
 # Mission: Create a graphical, data-file detection, UI for PyDAO.
-# Status: WORK IN PROGRESS - Baseline testing okay ("income.csv")
+# Status: Code Complete. Alpha.
 
 import os
 import sys
@@ -16,17 +16,19 @@ from tkinter.filedialog import askopenfilename
 from tkinter import simpledialog
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.SchemaDef.Order import OrderDef
+from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 from collections import OrderedDict
 
 class Data2Code(simpledialog.Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, parent, gendef=False, verbose=False):
         self.gen_ok = False
-        self.ztitle = "Data2Code 0.01"
+        self.gendef = gendef
+        self.verbose = verbose
+        self.ztitle = "Text Table Tool, Rev 0.1"
         self.order_info = None
         self.file_name = StringVar()
         self.file_name.set(" ")
@@ -68,17 +70,36 @@ class Data2Code(simpledialog.Dialog):
             file_name=fbase + ".py")
         self._show_order()
 
+    def _create_project(self, zsel):
+        gen = DaoGen()
+        self.gen_ok = gen.gen_order(
+            self.order_info,
+            self.file_name.get(), sep=zsel[2])
+        return self.gen_ok
+
+    def _create_code(self, zsel):
+        gen = DaoGen()
+        self.gen_ok = gen.write_code(
+            self.order_info,
+            self.file_name.get(), sep=zsel[2])
+        return self.gen_ok
+
     def apply(self):
         zsel = self.field_seps[int(self.field_sel.get())]
-        gen = DaoGen()
         try:
-            self.gen_ok = gen.write_code(
-                self.order_info,
-                self.file_name.get(), sep=zsel[2])
-            messagebox.showinfo("Success", "Code written to data folder.")
+            if self.gendef:
+                self.gen_ok = self._create_project(zsel)
+            else:
+                self.gen_ok = self._create_code(zsel)
         except Exception as ex:
-            self.gen_ok = False # Safe coding is no accident ...  ;-)
-            messagebox.showerror("Data File Error", ex)
+            print(ex)
+            self.gen_ok = False
+        finally:
+            if self.verbose:
+                if self.gen_ok:
+                    messagebox.showinfo("Generation Success", "File has been generated.")
+                else:
+                    messagebox.showerror("Data Format Error", "Review input file & definitions to try again.")
 
     def body(self, zframe):
         self.title(self.ztitle)
@@ -124,7 +145,7 @@ class Data2Code(simpledialog.Dialog):
 if __name__ == "__main__":
     zroot = Tk(useTk=1)
     zroot.tk_setPalette(background="Light Green")
-    zworks = Data2Code(parent=zroot)
+    zworks = Data2Code(parent=zroot, verbose=True)
     zroot.destroy()
     if zworks.gen_ok:
         print("gen okay")
