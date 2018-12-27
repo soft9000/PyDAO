@@ -122,7 +122,7 @@ class Data2Code(simpledialog.Dialog):
 
 
 if __name__ == "__main__":
-    zroot = Tk()
+    zroot = Tk(useTk=1)
     zroot.tk_setPalette(background="Light Green")
     zworks = Data2Code(parent=zroot)
     zroot.destroy()

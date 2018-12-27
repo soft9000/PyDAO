@@ -61,7 +61,7 @@ tables = [employee, principal, event, todo, entry]
 # STEP 2: Define your artifact (code and database) names
 # ######
 
-output_file = "./CrudMeister"
+output_file = "./~CrudMeister"
 try:
     import os
     os.remove(output_file + '.py')

@@ -6,19 +6,14 @@ from collections import OrderedDict
 class OrderClass:
 
     def __init__(self, class_name='SqltDAO', table_name='SqltDAO', db_name='./SqltDAO.sqlt3', file_name='./SqltDAO.py'):
-        self._db_name = db_name
-        self._class_name = None
-        self.class_name = class_name
-        self._table_name = table_name
-        self._file_name = file_name
+        self.zdict = OrderedDict()
+        self.zdict['class_name'] = class_name
+        self.zdict['table_name'] = table_name
+        self.zdict['file_name'] = file_name
+        self.zdict['db_name'] = db_name
 
     def __dict__(self):
-        results = OrderedDict()
-        results['class_name']=self._class_name
-        results['table_name']=self._table_name
-        results['file_name']=self._file_name
-        results['db_name']=self._db_name
-        return results
+        return OrderedDict(self.zdict) # copy!
 
     def __iter__(self):
         results = self.__dict__()
@@ -39,13 +34,13 @@ class OrderClass:
 
     @property
     def db_name(self):
-        return self._db_name
+        return self.zdict['db_name']
 
     @db_name.setter
     def table_name(self, name):
         if name is not None:
             try:
-                self._db_name = name
+                self.zdict['db_name'] = name
                 return True
             except:
                 pass
@@ -53,13 +48,13 @@ class OrderClass:
 
     @property
     def table_name(self):
-        return self._table_name
+        return self.zdict['table_name']
 
     @table_name.setter
     def table_name(self, name):
         if name is not None:
             try:
-                self._table_name = OrderClass.Norm(name)
+                self.zdict['table_name'] = OrderClass.Norm(name)
                 return True
             except:
                 pass
@@ -67,13 +62,13 @@ class OrderClass:
 
     @property
     def class_name(self):
-        return self._class_name
+        return self.zdict['class_name']
 
     @class_name.setter
     def class_name(self, name):
         if name is not None:
             try:
-                self._class_name = OrderClass.Norm(name)
+                self.zdict['class_name'] = OrderClass.Norm(name)
                 return True
             except:
                 pass
@@ -82,13 +77,13 @@ class OrderClass:
 
     @property
     def file_name(self):
-        return self._file_name
+        return self.zdict['file_name']
 
     @file_name.setter
     def file_name(self, name):
         if name is not None:
             try:
-                self._file_name = name
+                self.zdict['file_name'] = name
                 return True
             except:
                 pass

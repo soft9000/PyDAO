@@ -51,6 +51,16 @@ class TableDef():
         self.fields[name] = ztype
         return True
 
+    def __dict__(self):
+        results = OrderedDict()
+        for key in self.fields:
+            results[self._name + "." + key] = self.fields[key]
+        return results
+
+    def __iter__(self):
+        for key in self.fields:
+            yield self._name, key, self.fields[key]
+
     def __str__(self):
         ''' Program usable string. '''
         result = self._name + " {"
@@ -85,6 +95,7 @@ if __name__ == "__main__":
     assert(ztable.get_table_name() == "Default")
     ztable.set_table_name("   nergal zoom tik \t ")
     assert(ztable.get_table_name() == "nergal_zoom_tik")
-    print(repr(ztable))
+    for line in ztable:
+        print(line)
     
 

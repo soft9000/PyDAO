@@ -13,6 +13,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
+from collections import OrderedDict
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
@@ -24,39 +25,64 @@ class Main(Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.bSaved = False
         self.ztitle = "PyDAO 0.002"
         self.zsize = (600, 400)
         self.d2c = None
         self.project = None
-        self.schema_def = None
+        self.order_info = None
         self.zoptions = (
-            ("Projects",    [("Open Project", self._on_open),
-                             ("Save Project", self._on_save)]),
-            ("Generate",    [("Data2Code", self._on_d2c),
+            ("Projects",    [("Open Project...", self._on_open),
+                             ("Save Project...", self._on_save),
                              ("Create Code", self._on_create)],),
-            ("About",       [("About PyDao", self._on_about),
+            ("Generate",    [("Data2Code...", self._on_d2c),
+                             ("From Code...", self._on_code)]),
+            ("About",       [("About PyDao...", self._on_about),
                              ("Quit", self.destroy)]),
             )
-
+        self.order_info = OrderedDict()
+        dum = dict(OrderDef())
+        for key in dum:
+            self.order_info[key] = StringVar()
+        '''
+        activeBackground, foreground, selectColor,
+        activeForeground, highlightBackground, selectBackground,
+        background, highlightColor, selectForeground,
+        disabledForeground, insertBackground, troughColor.
+        '''
+        self.tk_setPalette(
+                background="Light Green",# e.g. Global
+                foreground="dark blue",  # e.g. Font color
+                insertBackground="blue", # e.g. Entry cursor
+                selectBackground="gold", # e.g. Editbox selections
+                activeBackground="gold", # e.g. Menu selections
+                )
+    
     def _on_open(self):
         self.project = askopenfilename()
-        self.title(self.project)
-        print(self.project)
+        if not self.project:
+            return
         zdef = OrderDef.LoadFile(self.project)
         if not zdef:
             messagebox.showerror(
                 "Schema File / Format Error",
                 "Unable to import " + self.project)
         else:
-            self.schema_def = zdef
+            self.title(self.project)
+            self.order_info = zdef
+            self._show_order()
 
     def _on_save(self):
-        if not self.schema_def:
+        if not self.order_info:
             messagebox.showerror(
                 "No Data",
                 "Schema Definition Required.")
             return False
+        
         return True
+
+    def _on_code(self):
+        self._on_about()
 
     def _on_create(self):
         self._on_about()
@@ -70,14 +96,27 @@ class Main(Tk):
             self.ztitle,
             "Work In Progress - Not For Use")
 
+    def _show_order(self):
+        zdict = dict(self.order_info)
+        for key in zdict:
+            self.order_info[key].set(zdict[key])
+
     def _set_frame(self):
         size = self.minsize()
         zframe = Frame(self)
+
+        # The Order Metadata
         zfa = LabelFrame(zframe, text=" Project ", background="Light Green", width=size[0]/2, height=size[1])
-        zfa.pack(side=LEFT)
-        zfa = LabelFrame(zframe, text=" Fields ", background="Light Blue", width=size[0]/2, height=size[1])
-        zfa.pack(side=RIGHT)
-        zframe.pack()
+        for ss, key in enumerate(self.order_info):
+            Label(zfa, text=key + ": ").grid(column=0, row=ss)
+            Entry(zfa, width=50,
+                  textvariable=self.order_info[key]).grid(column=1, row=ss)
+        
+        # The Field Set
+        zfb = LabelFrame(zframe, text=" Fields ", background="Light Blue", width=size[0]/2, height=size[1])
+        zfa.pack(side=LEFT, fill=BOTH)
+        zfb.pack(side=RIGHT)
+        zframe.pack(fill=BOTH)
         self.resizable(height=False, width=False)
         
 
