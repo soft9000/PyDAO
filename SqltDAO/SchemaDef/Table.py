@@ -14,6 +14,8 @@ class TableDef():
     SupportedTypes = ("id", "text", "integer", "float")
 
     def __init__(self, name='Default'):
+        if not name:
+            name = 'Default'
         self._name = TableDef.Normalize(name)
         self.fields = OrderedDict()
         self.add_field("ID", "integer")
@@ -24,6 +26,8 @@ class TableDef():
 
     def set_table_name(self, name):
         ''' Change the table name. '''
+        if not name:
+            name = 'Default'
         self._name = TableDef.Normalize(name)
 
     def add_field(self, name, ztype):

@@ -20,7 +20,7 @@ class OrderDef(OrderClass):
     '''
     FileType        = ".x1" # "Experemental Format 1" - Always used.
     DEFAULT_SCHEMA  = "Default"
-    IOKEY           = ".~OrderDef$IoKey"
+    IOKEY           = ".~Order Def$IoKey"
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

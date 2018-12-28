@@ -21,6 +21,7 @@ from SqltDAO.SchemaDef.Order import OrderDef
 from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 from SqltDAO.Gui.Data2Code import Data2Code
+from SqltDAO.Gui.StandardEntry import LabelEntry
 
 
 class Main(Tk):
@@ -29,21 +30,19 @@ class Main(Tk):
         super().__init__(*args, **kwargs)
         self.bSaved = False
         self.ztitle = "PyDAO 0.003"
-        self.zsize = (600, 400)
         self.d2c = None
         self.project = None
-        self.order_info = None
         self.zoptions = (
             ("Projects",    [("Open Project...", self._on_open),
                              ("Save Project...", self._on_save),
                              ("Create Code", self._on_create)],),
-            ("Tools",    [("Data2Code...", self._on_d2c),
+            ("Tools",       [("Data2Code...", self._on_d2c),
                              ("Data2Project...", self._on_d2p)]),
             ("About",       [("About PyDao...", self._on_about),
                              ("Quit", self.destroy)]),
             )
         self.order_info = OrderedDict()
-        dum = dict(OrderDef())
+        dum = dict(OrderClass())
         for key in dum:
             self.order_info[key] = StringVar()
         '''
@@ -101,36 +100,28 @@ class Main(Tk):
             self.order_info[key].set(zdict[key])
 
     def _set_frame(self):
-        size = self.minsize()
         zframe = Frame(self)
 
         # The Order Metadata
-        zfa = LabelFrame(zframe, text=" Project ", background="Light Green", width=size[0]/2, height=size[1])
+        zfa = LabelFrame(zframe, text=" Project ", background="Light Green")
         for ss, key in enumerate(self.order_info):
             Label(zfa, text=key + ": ").grid(column=0, row=ss)
             Entry(zfa, width=50,
                   textvariable=self.order_info[key]).grid(column=1, row=ss)
         
         # The Field Set
-        zfb = LabelFrame(zframe, text=" Fields ", background="Light Blue", width=size[0]/2, height=size[1])
-        zfa.pack(side=LEFT, fill=BOTH)
-        zfb.pack(side=RIGHT)
-        zframe.pack(fill=BOTH)
-        self.resizable(height=False, width=False)
-        
+        zfb = LabelFrame(zframe, text=" Fields ", background="Light Blue")
+        zdict = {"Schema":StringVar()}
+        zdict["Schema"].set(OrderDef.DEFAULT_SCHEMA)
+        LabelEntry.AddFields(zfb, zdict, readonly=True)
 
-    def _center(self):
-        width = self.winfo_screenwidth()
-        height = self.winfo_screenheight()
-        x = int((width - self.zsize[0]) / 2)
-        y = int((height - self.zsize[1]) / 2)
-        zstr = "+{}+{}".format(x, y)
-        self.geometry(zstr)
+        # User experience
+        zfa.pack(side=LEFT, fill=BOTH)
+        zfb.pack(side=LEFT, fill=BOTH)
+        zframe.pack(fill=BOTH)
 
     def begin(self):
         self.title(self.ztitle)
-        self._center()
-        self.minsize(*self.zsize)
         try:
             image = PhotoImage(file="zicon.png")
             self.wm_iconphoto(self, image)
