@@ -24,7 +24,7 @@ from SqltDAO.Gui.Data2Code import Data2Code
 from SqltDAO.Gui.StandardEntry import LabelEntry
 from SqltDAO.Gui.TableDef import TableDef as TableDef2
 from SqltDAO.SchemaDef.Table import TableDef as TableDef1
-
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
 
 class Main(Tk):
 
@@ -39,11 +39,15 @@ class Main(Tk):
                              ("Save Project...", self._on_save),
                              ("Create Code", self._on_create)],),
             ("Tools",       [("Data2Code...", self._on_d2c),
-                             ("Data2Project...", self._on_d2p)]),
+                             ("Data2Project...", self._on_d2p),
+                             ("Preferences...", self._on_d2pref)]),
             ("About",       [("About PyDao...", self._on_about),
                              ("Quit", self.destroy)]),
             )
-        self.order_info = OrderedDict()
+        self.table_frame = None
+        self.orderDef = None
+        self.home = "."
+        self.pref = DataPrefrences.Load(self.home)
 
         '''
         activeBackground, foreground, selectColor,
@@ -58,7 +62,6 @@ class Main(Tk):
                 selectBackground="gold", # e.g. Editbox selections
                 activeBackground="gold", # e.g. Menu selections
                 )
-        self.table_frame = None
     
     def _on_open(self):
         self.project = askopenfilename()
@@ -71,11 +74,11 @@ class Main(Tk):
                 "Unable to import " + self.project)
         else:
             self.title(self.project)
-            self.order_info = zdef
+            self.orderDef = zdef
             self._show_order()
 
     def _on_save(self):
-        if not self.order_info:
+        if not self.orderDef:
             messagebox.showerror(
                 "No Data",
                 "Schema Definition Required.")
@@ -90,16 +93,21 @@ class Main(Tk):
     def _on_d2p(self):
         Data2Code(self, gendef=True, verbose=True)
 
+    def _on_d2pref(self):
+        zpref = DataPrefrences(self, self.home)
+        if zpref.has_changed():
+            self.pref = DataPrefrences.Load(self.home)
+
     def _on_about(self):
         messagebox.showinfo(
             self.ztitle,
             "Work In Progress - Not For Use")
 
     def _show_order(self):
-        if not self.order_info:
+        if not self.orderDef:
             return False
-        for key in self.order_info.zdict_tables:
-            td1 = self.order_info.zdict_tables[key]
+        for key in self.orderDef.zdict_tables:
+            td1 = self.orderDef.zdict_tables[key]
             if self.table_frame.put_results(td1) is False:
                 return False
             return True
