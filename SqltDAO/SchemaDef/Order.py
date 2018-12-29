@@ -13,6 +13,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 from collections import OrderedDict
 from SqltDAO.SchemaDef.Table import TableDef
 from SqltDAO.CodeGen01.OrderClass import OrderClass
+from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
 class OrderDef(OrderClass):
     ''' Basic Factory-Order definition, multiple tables.
@@ -20,7 +21,7 @@ class OrderDef(OrderClass):
     '''
     FileType        = ".x1" # "Experemental Format 1" - Always used.
     DEFAULT_SCHEMA  = "Default"
-    IOKEY           = ".~Order Def$IoKey"
+    IOKEY           = ".~OrderDef$IoKey"
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -131,16 +132,17 @@ class OrderDef(OrderClass):
     def Create(order_class, fields):
         ''' Create and OrderDef from an OrderClass + Fields '''
         if isinstance(order_class, OrderClass) is False:
-            raise TypeError("Instance of OrderClass is required.")
+            raise TypeError("Error: Instance of OrderClass is required.")
         if not fields:
-            raise TypeError("No fields detected.")
+            raise TypeError("Error: No fields detected.")
         result = OrderDef()
         data = order_class.__dict__()
         for key in data:
             result.zdict[key] = data[key]
         ztable = TableDef(name=order_class.table_name)
         for field in fields:
-            ztable.add_field(field[0], field[1])
+            if ztable.add_field(field[0], field[1]) is False:
+                raise GenOrderError("Error: Invalid Data Definition.")
         result.add_table(ztable)
         return result
         

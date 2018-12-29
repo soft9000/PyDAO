@@ -145,7 +145,7 @@ class Data2Code(simpledialog.Dialog):
 if __name__ == "__main__":
     zroot = Tk(useTk=1)
     zroot.tk_setPalette(background="Light Green")
-    zworks = Data2Code(parent=zroot, verbose=True)
+    zworks = Data2Code(parent=zroot, verbose=True, gendef=True)
     zroot.destroy()
     if zworks.gen_ok:
         print("gen okay")

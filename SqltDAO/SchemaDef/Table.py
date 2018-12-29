@@ -11,7 +11,7 @@ from collections import OrderedDict
 class TableDef():
     ''' Basic table definitions. '''
 
-    SupportedTypes = ("id", "text", "integer", "float")
+    SupportedTypes = ("id", "text", "integer", "real")
 
     def __init__(self, name='Default'):
         if not name:
@@ -32,10 +32,10 @@ class TableDef():
 
     def add_field(self, name, ztype):
         ''' Add a field to the table. False if not added, or already added. '''
-        if not ztype in TableDef.SupportedTypes:
+        if not ztype.lower() in TableDef.SupportedTypes:
             return False
         if name in self.fields:
-            return False
+            return name.upper() == "ID" # Rule - for now.
         name = TableDef.Normalize(name)
         self.fields[name] = ztype
         return True

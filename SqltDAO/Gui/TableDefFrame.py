@@ -13,16 +13,14 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 from tkinter import *
 from tkinter import messagebox
 
-from SqltDAO.Gui.StandardEntry import LabelEntry
+from StandardEntry import LabelEntry
 from SqltDAO.SchemaDef.Table import TableDef as TableDef1
 
 from collections import OrderedDict
 
 class TableDef():
-    ''' Add a table + field definition to a frame. Contents returned as a SchemaDef @TableDef. '''
-    
+
     def __init__(self, frame):
-        ''' Provide a frame. Use has_results() / get_results() to extract any updates. '''
         self.table_name = StringVar()
         self.field_type = StringVar()
         self.field_name = StringVar()
@@ -32,47 +30,21 @@ class TableDef():
         self.table_name.set("Default")
         self.zlb = None
         self.results = None
-        self._body(frame)
+        self.body(frame)
 
     def has_results(self):
-        ''' Check to see if any field definitions were created or changed. '''
         return (self.results != None)
 
     def get_results(self):
-        ''' Get the most recent results. Returns SchemaDef @TableDef'''
         return self.results
 
-    def put_results(self, table_def):
-        ''' Edit a previous SchemaDef @TableDef. Returns True if aplied, else False.
-        Resets has_results() to False, pending any additional user machination.
-        '''
-        if not isinstance(table_def, TableDef1):
-            return False
-        self.table_name.set(table_def.get_table_name())
-        for field in table_def:
-            if field[1] == "ID":
-                continue
-            entry = field[1] + ":" + field[2]
-            self.zlb.insert(END, entry)            
-        self.results = None
-        return True
-
-    def pull_results(self):
-        ''' Extract & return a SchemaDef @TableDef, no matter if the user changed it, or not.
-        Also forces has_results() to True.
-        '''
-        self._apply()
-        return self.results
-
-    def _apply(self):
-        ''' Extract results, as they become available. '''
+    def apply(self):
         self.results = TableDef1(name=self.table_name.get())
         zdict = self._get_fields()
         for key in zdict:
             self.results.add_field(key, zdict[key])       
 
     def _get_fields(self):
-        ''' Support routine to extract fields from the listbox. Returns an ordered dictionary. '''
         results = OrderedDict()
         for ss in range(self.zlb.size()):
             entry = self.zlb.get(ss)
@@ -81,7 +53,6 @@ class TableDef():
         return results
 
     def _on_def(self):
-        ''' Validate + add a field definiton to the listbox. '''
         entry = self.field_name.get()
         ze = entry.lower()
         for ze2 in self._get_fields(): 
@@ -92,27 +63,24 @@ class TableDef():
                 return
         entry = entry + ":" + self.field_type.get().strip()
         self.zlb.insert(END, entry)
-        self._apply()
+        self.apply()
 
     def _on_edit(self):
-        ''' Extract a selected listbox entry for editing. '''
         ztuple = self.zlb.curselection()
         if ztuple:
             entry = self.zlb.get(ztuple[0])
             split = entry.split(':')
             self.field_name.set(split[0])
             self.field_type.set(split[1])
-        self._apply()
+        self.apply()
 
     def _on_delete(self):
-        ''' Remove a selected listbox entry. '''
         ztuple = self.zlb.curselection()
         if ztuple:
             self.zlb.delete(ztuple[0])
-        self._apply()
+        self.apply()
 
-    def _body(self, zframe):
-        ''' Prepares the frame for table management / creation during object initialization. '''
+    def body(self, zframe):
         # Table Selection
         zLF1 = LabelFrame(zframe, text=" Table ")
         
@@ -148,7 +116,6 @@ class TableDef():
 
 
 if __name__ == "__main__":
-    ''' Manual testing. '''
     zroot = Tk(useTk=1)
     zroot.tk_setPalette(background="Light Green")
     zworks = TableDef(Frame(zroot))
@@ -157,15 +124,5 @@ if __name__ == "__main__":
     if zworks.has_results():
         zdef = zworks.get_results()
         print("Got:", zdef)
-        zroot = Tk(useTk=1)
-        zroot.tk_setPalette(background="Light Blue")
-        zworks = TableDef(Frame(zroot))
-        assert(zworks.put_results(zdef) == True)
-        zroot.resizable(width=False, height=False)
-        zroot.mainloop()   
-        if zworks.has_results():
-            zdef = zworks.get_results()
-            print("Got2:", zdef)
-        
 
 

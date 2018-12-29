@@ -22,6 +22,8 @@ from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 from SqltDAO.Gui.Data2Code import Data2Code
 from SqltDAO.Gui.StandardEntry import LabelEntry
+from SqltDAO.Gui.TableDef import TableDef as TableDef2
+from SqltDAO.SchemaDef.Table import TableDef as TableDef1
 
 
 class Main(Tk):
@@ -29,7 +31,7 @@ class Main(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bSaved = False
-        self.ztitle = "PyDAO 0.003"
+        self.ztitle = "PyDAO 0.1"
         self.d2c = None
         self.project = None
         self.zoptions = (
@@ -42,9 +44,7 @@ class Main(Tk):
                              ("Quit", self.destroy)]),
             )
         self.order_info = OrderedDict()
-        dum = dict(OrderClass())
-        for key in dum:
-            self.order_info[key] = StringVar()
+
         '''
         activeBackground, foreground, selectColor,
         activeForeground, highlightBackground, selectBackground,
@@ -58,6 +58,7 @@ class Main(Tk):
                 selectBackground="gold", # e.g. Editbox selections
                 activeBackground="gold", # e.g. Menu selections
                 )
+        self.table_frame = None
     
     def _on_open(self):
         self.project = askopenfilename()
@@ -95,29 +96,17 @@ class Main(Tk):
             "Work In Progress - Not For Use")
 
     def _show_order(self):
-        zdict = dict(self.order_info)
-        for key in zdict:
-            self.order_info[key].set(zdict[key])
+        if not self.order_info:
+            return False
+        for key in self.order_info.zdict_tables:
+            td1 = self.order_info.zdict_tables[key]
+            if self.table_frame.put_results(td1) is False:
+                return False
+            return True
 
     def _set_frame(self):
         zframe = Frame(self)
-
-        # The Order Metadata
-        zfa = LabelFrame(zframe, text=" Project ", background="Light Green")
-        for ss, key in enumerate(self.order_info):
-            Label(zfa, text=key + ": ").grid(column=0, row=ss)
-            Entry(zfa, width=50,
-                  textvariable=self.order_info[key]).grid(column=1, row=ss)
-        
-        # The Field Set
-        zfb = LabelFrame(zframe, text=" Fields ", background="Light Blue")
-        zdict = {"Schema":StringVar()}
-        zdict["Schema"].set(OrderDef.DEFAULT_SCHEMA)
-        LabelEntry.AddFields(zfb, zdict, readonly=True)
-
-        # User experience
-        zfa.pack(side=LEFT, fill=BOTH)
-        zfb.pack(side=LEFT, fill=BOTH)
+        self.table_frame = TableDef2(zframe)
         zframe.pack(fill=BOTH)
 
     def begin(self):
@@ -146,19 +135,15 @@ class Main(Tk):
 
 
 if __name__ == "__main__":
-    if True:
-        main = Main()
+    main = Main()
+    try:
         if main.begin():
             main.run()
-    else:
+    except Exception as ex:
+        print(str(ex))
+    finally:
         try:
-            if main.begin():
-                main.run()
-        except Exception as ex:
-            print(str(ex))
-        finally:
-            try:
-                main.end()
-            except:
-                pass
+            main.end()
+        except:
+            pass
 

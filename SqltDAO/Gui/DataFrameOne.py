@@ -26,11 +26,10 @@ class DataFrameOne():
         '''
         self.parent = parent
         self.entry_width = entry_width
-        self.bg = "Light Green"
         self.display_info = type_dict
         self.ztitle = title
         self.frames = dict()
-        self.frames["root"]     = Frame(parent, bg=self.bg)
+        self.frames["root"]     = Frame(parent)
         self.frames["title"]    = self.mk_title(self.frames["root"])  # Container        
         self.frames["buttons"]  = self.mk_buttons(self.frames["title"]) # Siblings
         self.frames["body"]     = self.mk_body(self.frames["title"])    # Siblings
@@ -66,29 +65,21 @@ class DataFrameOne():
 
     def mk_title(self, zframe):
         ''' The title frame contains the button and body frames. '''
-        return LabelFrame(
-            zframe,
-            text=" {} ".format(self.ztitle),
-            bg=self.bg)
+        return LabelFrame(zframe, text=" {} ".format(self.ztitle))
 
     def mk_buttons(self, zframe):
         ''' The button frame contains the display's lifecycle buttons. '''
-        my_frame = Frame(zframe, bg=self.bg)
-        Button(my_frame, text=" {} ".format("Okay"),
-               bg=self.bg, command=self.apply
-               ).grid(column=0, row=0)
-        Label(my_frame, text="   ",
-               bg=self.bg).grid(column=1, row=0)
-        Button(my_frame, text=" {} ".format("Cancel"),
-               bg=self.bg, command=self.cancel
-               ).grid(column=2, row=0)
+        my_frame = Frame(zframe)
+        Button(my_frame, text=" {} ".format("Okay"), command=self.apply).grid(column=0, row=0)
+        Label(my_frame, text="   ").grid(column=1, row=0)
+        Button(my_frame, text=" {} ".format("Cancel"), command=self.cancel).grid(column=2, row=0)
         return my_frame
 
     def mk_body(self, zframe):
         ''' The body frame is where the data-entry options are displayed. '''
-        my_frame = Frame(zframe, bg=self.bg)
+        my_frame = Frame(zframe)
         for ss, key in enumerate(self.display_info):
-            Label(my_frame, text=" {}: ".format(key), bg=self.bg).grid(column=0, row=ss)
+            Label(my_frame, text=" {}: ".format(key)).grid(column=0, row=ss)
             Entry(my_frame, width=self.entry_width,
                   textvariable=self.display_info[key]).grid(column=1, row=ss)
         return my_frame

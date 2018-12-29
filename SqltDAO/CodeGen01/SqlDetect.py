@@ -113,14 +113,14 @@ class SqlDetect:
                         continue
                     for ss, ref in enumerate(pw):
                         if ref is None:
-                            pw[ss] = "String" # UNIQUE OVERRIDE
+                            pw[ss] = "Text" # UNIQUE OVERRIDE
                     if pw != saved:
                         for ss, col in enumerate(pw):
                             if saved[ss] != col:
                                 if saved[ss] == 'REAL' and col == 'INTEGER':
                                     pw[ss] = saved[ss] # Keep it REAL
                                     continue
-                                pw[ss] = "STRING" # UNIQUE OVERRIDE
+                                pw[ss] = "TEXT" # UNIQUE OVERRIDE
                         saved = pw # Demoted!
                     line = fh.readline()
                 results = zip(SqlDetect.FixHeaderNames(header), saved)
