@@ -26,13 +26,17 @@ class TableDef():
         self.table_name = StringVar()
         self.field_type = StringVar()
         self.field_name = StringVar()
-        self.field_types = ("text", "integer", "float")
+        self.field_types = TableDef1.SupportedTypes
         self.field_type.set(self.field_types[0])
         self.field_name.set("my_field")
         self.table_name.set("Default")
         self.zlb = None
         self.results = None
         self._body(frame)
+
+    def got_results(self):
+        ''' Preserve content, but detect any further user chances. '''
+        self.results = None
 
     def empty(self):
         ''' Empty the list box. Remove previous results. '''

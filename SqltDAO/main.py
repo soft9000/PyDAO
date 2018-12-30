@@ -30,7 +30,6 @@ class Main(Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bSaved = False
         self.ztitle = "PyDAO 0.1"
         self.d2c = None
         self.project = None
@@ -73,6 +72,7 @@ class Main(Tk):
                 "Schema File / Format Error",
                 "Unable to import " + self.project)
         else:
+            self.table_frame.got_results()
             self.title(self.project)
             self.orderDef = zdef
             self._show_order()
@@ -101,6 +101,7 @@ class Main(Tk):
                 "Exportation Error",
                 "Please verify user locations.")
             return
+        self.table_frame.got_results()
         val = os.path.split(self.orderDef.get_file_name())
         messagebox.showinfo(
             "Project Saved",

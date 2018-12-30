@@ -19,9 +19,9 @@ class OrderDef(OrderClass):
     ''' Basic Factory-Order definition, multiple tables.
     Note: Schema name will be used as the Database file + folder / archive name.
     '''
-    FileType        = ".x1" # "Experemental Format 1" - Always used.
+    FileType        = ".daop1" # "Official Format, Version 1" - Always used.
     DEFAULT_SCHEMA  = "Default"
-    IOKEY           = ".~OrderDef$IoKey"
+    IOKEY           = ".~OrdrDf Ky$." # Space elimination marks unique key.
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -102,6 +102,24 @@ class OrderDef(OrderClass):
         if not get_schema_name():
             return False
         return OrderDef.SaveFile(self)
+
+    @staticmethod
+    def Create(order_class, fields):
+        ''' Create and OrderDef from an OrderClass + Fields '''
+        if isinstance(order_class, OrderClass) is False:
+            raise TypeError("Error: Instance of OrderClass is required.")
+        if not fields:
+            raise TypeError("Error: No fields detected.")
+        result = OrderDef()
+        data = order_class.__dict__()
+        for key in data:
+            result.zdict[key] = data[key]
+        ztable = TableDef(name=order_class.table_name)
+        for field in fields:
+            if ztable.add_field(field[0], field[1]) is False:
+                raise GenOrderError("Error: Invalid Data Definition.")
+        result.add_table(ztable)
+        return result
             
     @staticmethod
     def LoadFile(fq_file):
@@ -129,30 +147,11 @@ class OrderDef(OrderClass):
                 return result
         except Exception as ex:
             print(ex)
-            return False
-
-    @staticmethod
-    def Create(order_class, fields):
-        ''' Create and OrderDef from an OrderClass + Fields '''
-        if isinstance(order_class, OrderClass) is False:
-            raise TypeError("Error: Instance of OrderClass is required.")
-        if not fields:
-            raise TypeError("Error: No fields detected.")
-        result = OrderDef()
-        data = order_class.__dict__()
-        for key in data:
-            result.zdict[key] = data[key]
-        ztable = TableDef(name=order_class.table_name)
-        for field in fields:
-            if ztable.add_field(field[0], field[1]) is False:
-                raise GenOrderError("Error: Invalid Data Definition.")
-        result.add_table(ztable)
-        return result
-        
+            return False        
     
     @staticmethod
     def SaveFile(loaded_obj, overwrite=False):
-        ''' Will always STORE an instance using the auto-created file name.
+        ''' Will always STORE an instance into the file name, if accessable.
         True / False returned.
         '''
         if not isinstance(loaded_obj, OrderDef):
@@ -163,7 +162,7 @@ class OrderDef(OrderClass):
     
     @staticmethod
     def SaveAs(fq_file, loaded_obj, overwrite=False):
-        ''' Will always STORE an instance using file name.
+        ''' Will always STORE an instance into the file name, if accessable.
         Default file-type extension.
         True / False returned.
         '''
@@ -176,7 +175,6 @@ class OrderDef(OrderClass):
             return False
         try:
             if bExists:
-                print("zunlink", fq_file)
                 os.unlink(fq_file)
             with open(fq_file, 'w') as fh:
                 zformat = OrderedDict(loaded_obj.zdict)

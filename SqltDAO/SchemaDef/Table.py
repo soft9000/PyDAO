@@ -4,14 +4,13 @@
 # 2018/12/19: File created
 
 # Mission: Manage the table-definition order
-# Status: WORK IN PROGRESS
+# Status: Code Complete. Alpha.
 
 from collections import OrderedDict
 
 class TableDef():
     ''' Basic table definitions. '''
-
-    SupportedTypes = ("id", "text", "integer", "real")
+    SupportedTypes = ("text", "integer", "real") # KEEP default type, first.
 
     def __init__(self, name='Default'):
         if not name:
