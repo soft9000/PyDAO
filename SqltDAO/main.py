@@ -68,7 +68,6 @@ class Main(Tk):
         if not self.project:
             return
         zdef = OrderDef.LoadFile(self.project)
-        print("zdef-load", zdef, "\n")
         if not zdef:
             messagebox.showerror(
                 "Schema File / Format Error",
@@ -80,7 +79,6 @@ class Main(Tk):
 
     def _on_save(self):
         ztbl = self.table_frame.pull_results()
-        print("pull_results", ztbl, "\n")
         zdict = ztbl.__dict__()
         if not zdict:
             messagebox.showerror(
@@ -104,7 +102,6 @@ class Main(Tk):
                 "Please verify user locations.")
             return
         val = os.path.split(self.orderDef.get_file_name())
-        print("orderDef", self.orderDef, "\n")
         messagebox.showinfo(
             "Project Saved",
             "Project file saved as " + val[-1] + "in preference location.")
@@ -131,7 +128,6 @@ class Main(Tk):
     def _show_order(self):
         if not self.orderDef:
             return False
-        print("_show_order", self.orderDef)
         self.table_frame.empty()
         for key in self.orderDef.zdict_tables:
             td1 = self.orderDef.zdict_tables[key]
@@ -140,7 +136,6 @@ class Main(Tk):
                     "Display Error",
                     "Critical: _show_order regression.")
                 return False
-            return True # TODO: HIGHLANDER HACK.
 
     def _set_frame(self):
         zframe = Frame(self)

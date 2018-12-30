@@ -117,17 +117,18 @@ class OrderDef(OrderClass):
                 result = OrderDef()
                 for key in zdict:
                     if key == OrderDef.IOKEY:
-                        pw_def = TableDef()
+                        pw_def = None
                         zrows = eval(zdict[key])
                         for row in zrows:
-                            if pw_def.get_table_name() != row[0]:
+                            if pw_def is None:
                                 pw_def = TableDef(name=row[0])
-                                result.add_table(pw_def)
                             pw_def.add_field(row[1], row[2])
+                        result.add_table(pw_def)
                     else:
                         result.zdict[key] = zdict[key]
                 return result
         except Exception as ex:
+            print(ex)
             return False
 
     @staticmethod
