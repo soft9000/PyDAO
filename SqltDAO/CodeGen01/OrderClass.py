@@ -1,7 +1,12 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
 
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+
 from collections import OrderedDict
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
 
 class OrderClass:
 
@@ -9,8 +14,25 @@ class OrderClass:
         self.zdict = OrderedDict()
         self.zdict['class_name'] = class_name
         self.zdict['table_name'] = table_name
-        self.zdict['file_name'] = file_name
-        self.zdict['db_name'] = db_name
+        self.zdict['file_name'] = DataPrefrences.MkHome(file_name)
+        self.zdict['db_name'] = DataPrefrences.MkHome(db_name)
+
+    def home(self, opred):
+        ''' Attempt to apply the user preferences (OrderedDict) to this order.
+        True if applied, False otherwise.'''
+        if not isinstance(opred, OrderedDict):
+            return False
+        
+        values = os.path.split(self.zdict['file_name'])
+        if not values:
+            return False
+        self.zdict['file_name'] = opred['Sql Folder'] + "/" + values[-1]
+        
+        values = os.path.split(self.zdict['db_name'])
+        if not values:
+            return False
+        self.zdict['db_name'] =  opred['Code Folder'] + "/" + values[-1]
+        return True
 
     def __dict__(self):
         return OrderedDict(self.zdict) # copy!

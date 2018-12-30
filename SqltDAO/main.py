@@ -45,7 +45,7 @@ class Main(Tk):
                              ("Quit", self.destroy)]),
             )
         self.table_frame = None
-        self.orderDef = None
+        self.orderDef = OrderDef()
         self.home = "."
         self.pref = DataPrefrences.Load(self.home)
 
@@ -68,6 +68,7 @@ class Main(Tk):
         if not self.project:
             return
         zdef = OrderDef.LoadFile(self.project)
+        print("zdef-load", zdef, "\n")
         if not zdef:
             messagebox.showerror(
                 "Schema File / Format Error",
@@ -78,11 +79,35 @@ class Main(Tk):
             self._show_order()
 
     def _on_save(self):
-        if not self.orderDef:
+        ztbl = self.table_frame.pull_results()
+        print("pull_results", ztbl, "\n")
+        zdict = ztbl.__dict__()
+        if not zdict:
             messagebox.showerror(
                 "No Data",
                 "Schema Definition Required.")
-        self._on_about()
+            return
+        self.orderDef = OrderDef()
+        if not self.orderDef.add_table(ztbl):
+            messagebox.showerror(
+                "Invalid Table",
+                "Please verify SQL Table Definition.")
+            return
+        if not self.orderDef.home(self.pref):
+            messagebox.showerror(
+                "Invalid Locations",
+                "Please verify user locations.")
+            return
+        if OrderDef.SaveFile(self.orderDef, overwrite=True) is False:
+            messagebox.showerror(
+                "Exportation Error",
+                "Please verify user locations.")
+            return
+        val = os.path.split(self.orderDef.get_file_name())
+        print("orderDef", self.orderDef, "\n")
+        messagebox.showinfo(
+            "Project Saved",
+            "Project file saved as " + val[-1] + "in preference location.")
 
     def _on_create(self):
         self._on_about()
@@ -106,11 +131,16 @@ class Main(Tk):
     def _show_order(self):
         if not self.orderDef:
             return False
+        print("_show_order", self.orderDef)
+        self.table_frame.empty()
         for key in self.orderDef.zdict_tables:
             td1 = self.orderDef.zdict_tables[key]
             if self.table_frame.put_results(td1) is False:
+                messagebox.showerror(
+                    "Display Error",
+                    "Critical: _show_order regression.")
                 return False
-            return True
+            return True # TODO: HIGHLANDER HACK.
 
     def _set_frame(self):
         zframe = Frame(self)

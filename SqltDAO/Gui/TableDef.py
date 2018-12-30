@@ -34,6 +34,11 @@ class TableDef():
         self.results = None
         self._body(frame)
 
+    def empty(self):
+        ''' Empty the list box. Remove previous results. '''
+        self.results = None
+        self.zlb.delete(0, last=END)
+
     def has_results(self):
         ''' Check to see if any field definitions were created or changed. '''
         return (self.results != None)

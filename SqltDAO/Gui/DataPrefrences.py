@@ -24,15 +24,14 @@ from SqltDAO.Gui.StandardEntry import LabelEntryAction
 class Dp1(simpledialog.Dialog):
 
     FILE_NAME = "DataPref.dp1"
+    KEYS = ('Projects', 'Csv Folder', 'Sql Folder', 'Code Folder')
 
     def __init__(self, parent, home_dir):
         self.home_dir = Dp1.MkHome(home_dir)
         self.bChanged = False
         self.options = OrderedDict()
-        self.options['Projects'] = StringVar()
-        self.options['Csv Folder'] = StringVar()
-        self.options['Sql Folder'] = StringVar()
-        self.options['Code Folder'] = StringVar()
+        for key in Dp1.KEYS:
+            self.options[key] = StringVar()
         for line in self.options:
             self.options[line].set(self.home_dir)
         super().__init__(parent=parent)
@@ -60,6 +59,7 @@ class Dp1(simpledialog.Dialog):
         self.get_folder('Code Folder')
 
     def body(self, zframe):
+        self.title("PyDAO Locations")
         legacy = Dp1.Load(self.home_dir)
         if legacy:
             for key in self.options:
@@ -72,7 +72,7 @@ class Dp1(simpledialog.Dialog):
         order.add_entry('Csv Folder', tv=self.options['Csv Folder'], action=self._on_csv)
         order.add_entry('Sql Folder', tv=self.options['Sql Folder'], action=self._on_sql)
         order.add_entry('Code Folder', tv=self.options['Code Folder'], action=self._on_code)
-        LabelEntryAction.CreateLframe(self,order).pack(fill=BOTH)
+        LabelEntryAction.CreateLframe(self,order, title=' Folder Locations ').pack(fill=BOTH)
         self.attributes('-topmost',True)
 
     def __dict__(self):
@@ -107,20 +107,24 @@ class Dp1(simpledialog.Dialog):
 
     @staticmethod
     def Load(home_dir):
-        ''' Returns a dictionary if preferences are found, else None '''
+        ''' Returns a dictionary if preferences are found. Defaults to home location if none. '''
         home_dir = Dp1.MkHome(home_dir)
         ofile = home_dir + '/' + Dp1.FILE_NAME
         try:
             with open(ofile) as fh:
                 return eval(fh.readline())
         except:
-            pass
-        return None
+            result = OrderedDict()
+            for key in Dp1.KEYS:
+                result[key] = home_dir
+            return result
+
 
 
 if __name__ == "__main__":
     ''' Manual testing '''
     zroot = Tk()
     zword = Dp1(zroot, '.')
+    zroot.mainloop()
     
     

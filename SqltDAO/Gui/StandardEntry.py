@@ -111,6 +111,7 @@ class LabelEntryAction():
                 Entry(zframe, width=entry_width,
                       textvariable=zorder['tv']).grid(column=1, row=ss)
             if zorder['action']:
+                Label(zframe, width=1).grid(column=2, row=ss)
                 Button(zframe, text=zorder['actiontext'],
-                       command=zorder['action']).grid(column=2, row=ss)
+                       command=zorder['action']).grid(column=3, row=ss)
         return zframe

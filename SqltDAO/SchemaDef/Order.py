@@ -52,6 +52,8 @@ class OrderDef(OrderClass):
         if table_def._name in self.zdict_tables:
             return False
         self.zdict_tables[table_def._name] = table_def
+        self.table_name = table_def._name           # TODO: HIGHLANDER HACK - Rev 2 ... changeit?
+        self.zdict['schema_name'] = self.table_name # TODO: Multi-Table     - Rev 3.
         return True
 
     def get_table(self, name):
@@ -173,6 +175,7 @@ class OrderDef(OrderClass):
             return False
         try:
             if bExists:
+                print("zunlink", fq_file)
                 os.unlink(fq_file)
             with open(fq_file, 'w') as fh:
                 zformat = OrderedDict(loaded_obj.zdict)
@@ -185,6 +188,7 @@ class OrderDef(OrderClass):
 
             return os.path.exists(fq_file)
         except Exception as ex:
+            print(ex)
             return False
 
 
