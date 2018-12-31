@@ -29,8 +29,9 @@ from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
 class Main(Tk):
 
     def __init__(self, *args, **kwargs):
+        from SqltDAO.CodeGen01.Meta import Meta
         super().__init__(*args, **kwargs)
-        self.ztitle = "PyDAO 0.1"
+        self.ztitle = Meta.Title()
         self.d2c = None
         self.project = None
         self.zoptions = (
