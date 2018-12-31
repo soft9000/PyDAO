@@ -46,7 +46,6 @@ class Main(Tk):
         self.table_frame = None
         self.orderDef = OrderDef()
         self.home = "."
-        self.pref = DataPrefrences.Load(self.home)
 
         '''
         activeBackground, foreground, selectColor,
@@ -63,7 +62,12 @@ class Main(Tk):
                 )
     
     def _on_open(self):
-        self.project = askopenfilename()
+        pref = DataPrefrences.Load(self.home)
+        self.project = askopenfilename(
+            title="Open Project File",
+            initialdir=pref['Projects'],
+            filetypes=[("PyDAO Project", OrderDef.FileType)]
+            )
         if not self.project:
             return
         zdef = OrderDef.LoadFile(self.project)
@@ -85,13 +89,13 @@ class Main(Tk):
                 "No Data",
                 "Schema Definition Required.")
             return
-        self.orderDef = OrderDef()
+        self.orderDef = OrderDef(name=ztbl.get_table_name())
         if not self.orderDef.add_table(ztbl):
             messagebox.showerror(
                 "Invalid Table",
                 "Please verify SQL Table Definition.")
             return
-        if not self.orderDef.home(self.pref):
+        if not self.orderDef.home(DataPrefrences.Load(self.home)):
             messagebox.showerror(
                 "Invalid Locations",
                 "Please verify user locations.")
@@ -102,7 +106,7 @@ class Main(Tk):
                 "Please verify user locations.")
             return
         self.table_frame.got_results()
-        val = os.path.split(self.orderDef.get_file_name())
+        val = os.path.split(self.orderDef.file_name)
         messagebox.showinfo(
             "Project Saved",
             "Project file saved as " + val[-1] + "in preference location.")
@@ -119,7 +123,7 @@ class Main(Tk):
     def _on_d2pref(self):
         zpref = DataPrefrences(self, self.home)
         if zpref.has_changed():
-            self.pref = DataPrefrences.Load(self.home)
+            pass
 
     def _on_about(self):
         messagebox.showinfo(

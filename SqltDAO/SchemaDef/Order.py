@@ -4,7 +4,7 @@
 # 2018/12/19: File created
 
 # Mission: Manage the factory order
-# Status: Serialization testing okay
+# Status: Mutli-table serialization testing okay
 
 import os
 import sys
@@ -15,30 +15,68 @@ from SqltDAO.SchemaDef.Table import TableDef
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
-class OrderDef(OrderClass):
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+
+class OrderDef():
     ''' Basic Factory-Order definition, multiple tables.
     Note: Schema name will be used as the Database file + folder / archive name.
     '''
-    FileType        = ".daop1" # "Official Format, Version 1" - Always used.
+    NONAME          = "_-$junker!__.~"  # Invalid SQL name - for "must init" testing
+    FileType        = ".daop1"          # "Official Format, Version 1" - Always used.
     DEFAULT_SCHEMA  = "Default"
-    IOKEY           = ".~OrdrDf Ky$." # Space elimination marks unique key.
+    IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.zdict['schema_name'] = OrderDef.DEFAULT_SCHEMA
+    def __init__(self, name=None):
+        self.zdict = OrderedDict()
+        if not name:
+            name = OrderDef.NONAME
+        self.zdict['schema_name']   = name
+        self.zdict['class_name']    = name
+        self.zdict['file_fname']    = name
+        self.zdict['db_fname']      = name
         self.zdict_tables = OrderedDict()
 
-    def get_file_name(self):
-        ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
-        if not self.get_schema_name():
-            self.zdict['schema_name'] = OrderDef.DEFAULT_SCHEMA
-        return self.get_schema_name() + OrderDef.FileType
+    def home(self, opred):
+        ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
+        True if applied, False otherwise.'''
+        if not isinstance(opred, dict):
+            return False
+        
+        values = os.path.split(self.zdict['file_fname'])
+        if not values:
+            return False
+        self.zdict['file_fname'] = opred['Sql Folder'] + "/" + values[-1]
+        
+        values = os.path.split(self.zdict['db_fname'])
+        if not values:
+            return False
+        self.zdict['db_fname'] =  opred['Code Folder'] + "/" + values[-1]
+        return True
 
-    def get_schema_name(self):
+    @property
+    def name(self):
+        return self.zdict['class_fname']
+
+    @name.setter
+    def name(self, name):
+        if not name:
+            name = OrderDef.NONAME
+        for key in self.zdict:
+            self.zdict[key] = name
+        return True
+
+    @property
+    def file_name(self):
+        ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
+        return self.zdict['file_fname'] + OrderDef.FileType
+
+    @property
+    def schema_name(self):
         ''' Query the schema name. '''
         return self.zdict['schema_name']
 
-    def set_schema_name(self, name):
+    @schema_name.setter
+    def schema_name(self, name):
         ''' Change the schema name. True if all is well, else False. '''
         if not name:
             return False
@@ -52,11 +90,10 @@ class OrderDef(OrderClass):
         if table_def._name in self.zdict_tables:
             return False
         self.zdict_tables[table_def._name] = table_def
-        self.table_name = table_def._name           # TODO: HIGHLANDER HACK - Rev 2 ... changeit?
-        self.zdict['schema_name'] = self.table_name # TODO: Multi-Table     - Rev 3.
+        self.zdict['schema_name'] = table_def._name # TODO: Multi-Table - Rev 3.
         return True
 
-    def get_table(self, name):
+    def find_table(self, name):
         ''' Lookup a table definition, by name. None if not found. '''
         if name in self.zdict_tables:
             return self.zdict_tables[table_def._name]
@@ -92,20 +129,20 @@ class OrderDef(OrderClass):
             yield key, values[key]
 
     def __dict__(self):
-        results = super().__dict__()
+        results = OrderedDict(self.zdict)
         for key in self.zdict_tables:
             results[key] = self.zdict_tables[key]
         return results
 
     def save(self):
         ''' Save using build-in schema name. '''
-        if not get_schema_name():
+        if not schema_name():
             return False
         return OrderDef.SaveFile(self)
 
     @staticmethod
     def Create(order_class, fields):
-        ''' Create and OrderDef from an OrderClass + Fields '''
+        ''' Create an OrderDef from an OrderClass + Fields. Raise an exception on error. '''
         if isinstance(order_class, OrderClass) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
         if not fields:
@@ -120,6 +157,37 @@ class OrderDef(OrderClass):
                 raise GenOrderError("Error: Invalid Data Definition.")
         result.add_table(ztable)
         return result
+
+    @staticmethod
+    def Extract(order_def, pref):
+        ''' Extract an OrderClass from an OrderDef. Raise an exception on error.'''
+        if isinstance(order_def, OrderDef) is False:
+            raise TypeError("Error: Instance of OrderClass is required.")
+        if isinstance(pref, dict) is False:
+            raise TypeError("Error: Dictionary of DataPrefrences is required.")
+        for key in order_def.zdict:
+            if order_def.zdict[key] == OrderDef.NONAME:
+                raise TypeError("Error: Please define a '" + key + "' value.")
+
+        try:
+            for key in DataPrefrences.KEYS:
+                if not pref[key]:
+                    pass
+        except:
+            raise TypeError("Error: Key value '" + key + "' not found.")
+        
+        table_name = None
+        for key in order_def.zdict_tables:
+            table_name = order_def.zdict_tables[key].get_table_name()
+            break # HIGHLANDER HACK
+        if not table_name:
+            raise TypeError("Error: No tables have been defined.")
+        
+        return OrderClass(
+            class_name=table_name,
+            table_name=table_name,
+            db_name=pref['Csv Folder'] + "/" + table_name + ".sqlt3",
+            file_name=pref['Projects'] + "/" + table_name + ".py")
             
     @staticmethod
     def LoadFile(fq_file):
@@ -135,10 +203,12 @@ class OrderDef(OrderClass):
                 result = OrderDef()
                 for key in zdict:
                     if key == OrderDef.IOKEY:
-                        pw_def = None
+                        pw_def = TableDef(name=OrderDef.NONAME)
                         zrows = eval(zdict[key])
                         for row in zrows:
-                            if pw_def is None:
+                            if pw_def.get_table_name() != row[0]:
+                                if pw_def.get_table_name() != OrderDef.NONAME:
+                                    result.add_table(pw_def)
                                 pw_def = TableDef(name=row[0])
                             pw_def.add_field(row[1], row[2])
                         result.add_table(pw_def)
@@ -146,7 +216,7 @@ class OrderDef(OrderClass):
                         result.zdict[key] = zdict[key]
                 return result
         except Exception as ex:
-            print(ex)
+            raise(ex)
             return False        
     
     @staticmethod
@@ -157,7 +227,7 @@ class OrderDef(OrderClass):
         if not isinstance(loaded_obj, OrderDef):
             return False
         return OrderDef.SaveAs(
-            loaded_obj.get_file_name(),
+            loaded_obj.file_name,
             loaded_obj, overwrite=overwrite)
     
     @staticmethod
@@ -187,15 +257,17 @@ class OrderDef(OrderClass):
 
             return os.path.exists(fq_file)
         except Exception as ex:
-            print(ex)
+            raise(ex)
             return False
 
 
 if __name__ == "__main__":
     ''' A few basic test cases ... '''    
-    zorder = OrderDef()
-    zname = zorder.get_file_name()
+    zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
+    zname = zorder.file_name
+    print("zname", zname)
     if os.path.exists(zname):
+        print("unlinking", zname)
         os.unlink(zname)
     for ss in range(4):
         table = "zTable " + str(ss)
@@ -203,20 +275,33 @@ if __name__ == "__main__":
         for ztype in TableDef.SupportedTypes:
             ztable.add_field(table + ' ' + ztype, ztype)
         zorder.add_table(ztable)
+
+    print("zorder:\n", zorder, '\n')
+    zname = zorder.file_name
+    # print("zname", zname)
+    if os.path.exists(zname):
+        print("unlinking", zname)
+        os.unlink(zname)
     
     assert(OrderDef.SaveFile(zorder))
+    
     zorder2 = OrderDef.LoadFile(zname)
+    # print("zorder2:\n", zorder2, '\n')
     assert(zorder2 is not False)
     assert(str(zorder) == str(zorder2))
+
     for ss, table in enumerate(zorder2, 1):
         if isinstance(table, TableDef):
-            print("Table:", table.get_table_name())
+            print("Table:", table.table_name())
             for field in table:
                 print(field)
         else:
             print(ss, table)
 
-    os.unlink(zorder.get_file_name())
+    odd = OrderDef.Extract(zorder2, DataPrefrences.Load("."))
+    print(odd)
+
+    os.unlink(zorder.file_name)
     
     
 

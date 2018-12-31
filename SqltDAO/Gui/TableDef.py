@@ -35,7 +35,7 @@ class TableDef():
         self._body(frame)
 
     def got_results(self):
-        ''' Preserve content, but detect any further user chances. '''
+        ''' Preserve content, but detect any further user changes. '''
         self.results = None
 
     def empty(self):
