@@ -32,9 +32,9 @@ Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/
 While that stock exchange's official pipe-delimited ("enpiped" ;) data file is incuded for demonstrative
 purposes, note that the most recent set of enpiped data tokens can be downloaded from the stock exchange.
 
-MAIN.py (WORK IN PROCESS)
+MAIN.py (Release Testing)
 -------
-We are working on the GUI in our spare time. Will let everyone know when the UI is a reality.
+The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
 If you want to support the effort, then purchase one of our training opportunuties, below.
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
