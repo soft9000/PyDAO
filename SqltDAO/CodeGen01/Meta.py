@@ -16,4 +16,4 @@ class Meta:
     
     @staticmethod
     def Title():
-        return "{0}, Version {1} (Alpha)".format(Meta.PRODUCT, Meta.VERSION)
+        return "{0}, Ver. {1} (Alpha)".format(Meta.PRODUCT, Meta.VERSION)
