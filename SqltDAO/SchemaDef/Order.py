@@ -23,6 +23,8 @@ class OrderDef():
     '''
     NONAME          = "_-$junker!__.~"  # Invalid SQL name - for "must init" testing
     FileType        = ".daop1"          # "Official Format, Version 1" - Always used.
+    DbType          = ".sqlt3"
+    CodeType        = ".py"
     DEFAULT_SCHEMA  = "Default"
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     
@@ -55,7 +57,7 @@ class OrderDef():
 
     @property
     def name(self):
-        return self.zdict['class_fname']
+        return self.zdict['class_name']
 
     @name.setter
     def name(self, name):
@@ -66,9 +68,19 @@ class OrderDef():
         return True
 
     @property
-    def file_name(self):
+    def project_name(self):
         ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
         return self.zdict['file_fname'] + OrderDef.FileType
+
+    @property
+    def code_name(self):
+        ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
+        return self.zdict['file_fname'] + OrderDef.CodeType
+
+    @property
+    def db_name(self):
+        ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
+        return self.zdict['file_fname'] + OrderDef.DbType
 
     @property
     def schema_name(self):
@@ -83,6 +95,11 @@ class OrderDef():
         self.zdict['schema_name'] = TableDef.Normalize(name)
         return True
 
+    @property
+    def class_name(self):
+        ''' Query the class name. '''
+        return self.zdict['class_name']
+
     def add_table(self, table_def):
         ''' Add a table. False if not added, or already added. '''
         if not isinstance(table_def, TableDef):
@@ -90,13 +107,16 @@ class OrderDef():
         if table_def._name in self.zdict_tables:
             return False
         self.zdict_tables[table_def._name] = table_def
-        self.zdict['schema_name'] = table_def._name # TODO: Multi-Table - Rev 3.
         return True
+
+    def table_names(self):
+        ''' Return all of the table-names. Can be empty.'''
+        return tuple(self.zdict_tables.keys())
 
     def find_table(self, name):
         ''' Lookup a table definition, by name. None if not found. '''
         if name in self.zdict_tables:
-            return self.zdict_tables[table_def._name]
+            return self.zdict_tables[name]
         return None
 
     def remove_table(self, name):
@@ -135,9 +155,7 @@ class OrderDef():
         return results
 
     def save(self):
-        ''' Save using build-in schema name. '''
-        if not schema_name():
-            return False
+        ''' Save using existing names. '''
         return OrderDef.SaveFile(self)
 
     @staticmethod
@@ -216,7 +234,7 @@ class OrderDef():
                         result.zdict[key] = zdict[key]
                 return result
         except Exception as ex:
-            raise(ex)
+            print(ex)
             return False        
     
     @staticmethod
@@ -227,7 +245,7 @@ class OrderDef():
         if not isinstance(loaded_obj, OrderDef):
             return False
         return OrderDef.SaveAs(
-            loaded_obj.file_name,
+            loaded_obj.project_name,
             loaded_obj, overwrite=overwrite)
     
     @staticmethod
@@ -257,14 +275,14 @@ class OrderDef():
 
             return os.path.exists(fq_file)
         except Exception as ex:
-            raise(ex)
+            print(ex)
             return False
 
 
 if __name__ == "__main__":
     ''' A few basic test cases ... '''    
     zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
-    zname = zorder.file_name
+    zname = zorder.project_name
     print("zname", zname)
     if os.path.exists(zname):
         print("unlinking", zname)
@@ -277,7 +295,7 @@ if __name__ == "__main__":
         zorder.add_table(ztable)
 
     print("zorder:\n", zorder, '\n')
-    zname = zorder.file_name
+    zname = zorder.project_name
     # print("zname", zname)
     if os.path.exists(zname):
         print("unlinking", zname)
@@ -291,12 +309,7 @@ if __name__ == "__main__":
     assert(str(zorder) == str(zorder2))
 
     for ss, table in enumerate(zorder2, 1):
-        if isinstance(table, TableDef):
-            print("Table:", table.table_name())
-            for field in table:
-                print(field)
-        else:
-            print(ss, table)
+        print(ss, table)
 
     odd = OrderDef.Extract(zorder2, DataPrefrences.Load("."))
     print(odd)

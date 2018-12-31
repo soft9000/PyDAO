@@ -81,38 +81,58 @@ class Main(Tk):
             self.orderDef = zdef
             self._show_order()
 
-    def _on_save(self):
+    def do_save(self):
+        ''' Project file must be created for both saving same, as well as for creating code. '''
         ztbl = self.table_frame.pull_results()
         zdict = ztbl.__dict__()
         if not zdict:
             messagebox.showerror(
                 "No Data",
                 "Schema Definition Required.")
-            return
+            return False
         self.orderDef = OrderDef(name=ztbl.get_table_name())
         if not self.orderDef.add_table(ztbl):
             messagebox.showerror(
                 "Invalid Table",
                 "Please verify SQL Table Definition.")
-            return
+            return False
         if not self.orderDef.home(DataPrefrences.Load(self.home)):
             messagebox.showerror(
                 "Invalid Locations",
                 "Please verify user locations.")
-            return
+            return False
         if OrderDef.SaveFile(self.orderDef, overwrite=True) is False:
             messagebox.showerror(
                 "Exportation Error",
                 "Please verify user locations.")
-            return
+            return False
         self.table_frame.got_results()
-        val = os.path.split(self.orderDef.file_name)
-        messagebox.showinfo(
-            "Project Saved",
-            "Project file saved as " + val[-1] + "in preference location.")
+        return True
+    
+    def _on_save(self):
+        if self.do_save() is True:
+            val = os.path.split(self.orderDef.file_name)
+            messagebox.showinfo(
+                "Project Saved",
+                "Project file saved as " + val[-1] + " in preference location.")
 
     def _on_create(self):
-        self._on_about()
+        if self.do_save() is True:
+            pref = DataPrefrences.Load(self.home)
+            order_class = OrderDef.Extract(self.orderDef, pref)
+            zfields = OrderedDict()
+            ztables = self.orderDef.table_names()
+            table_def  = self.orderDef.find_table(ztables[0]) # TODO: Highlander hack.
+            for row in table_def:
+                zfields[row[1]] = row[2]
+            sql = SqliteCrud(order_class, zfields)
+            zcode = sql.code_class_template(self.orderDef.db_name, sep='","')
+            with open(self.orderDef.code_name, 'w') as fh:
+                print(zcode, file=fh)
+            val = os.path.split(self.orderDef.code_name)
+            messagebox.showinfo(
+                "Source Code Success",
+                "Class created as " + val[-1] + " in preference location.")
 
     def _on_d2c(self):
         Data2Code(self, verbose=True)
