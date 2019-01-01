@@ -8,7 +8,8 @@ The generated code can be used to create / drop database schema (DDL,) as well a
 
 MAIN.py (Release Testing)
 -------
-2018/12/31: The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
+2018/12/31: The GUI is working well enough to declare what we have as an Alpha. All four (4) workflows are supported - feel free to give it a try!
+
 If you want to support the effort, then purchase one of our training opportunuties, below.
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
