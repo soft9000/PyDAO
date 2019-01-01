@@ -4,7 +4,7 @@ Setting our sights upon importing data from the stock market, we felt the need t
 create a tool that will quickly allow our students to convert delimited text + headers
 into a Python class.
 
-Plans are afoot to create an Order-interface, but for the moment please see:
+Our new GUI is working well. See **main.py** to give it a try - Videos coming soon!
 
 API Example:
 ===========
