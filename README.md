@@ -1,13 +1,14 @@
 # PyDAO
 This Soft9000/PyDAO project allows us to quickly create a Python Class from either a GUI, API, textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
-The generated code can be used to create, import, as well as work with (C.R.U.D and query using SQL SELECTions, 
-etc.) the designed / detected / updated schema. Workflows include (1) creating stand-alone data projects, (2) extracting data projects from textual (CSV, etc.) data files, (3) creating database code from code projects, and (4) directly creating code from textual data files.
+Workflows include (1) creating stand-alone data projects, (2) extracting data projects from textual (CSV, etc.) data files, (3) creating database code from code projects, and (4) directly creating code from textual data files.
+
+The generated code can be used to create / drop database schema (DDL,) as well as to import & work with (C.R.U.D & query) your designed / detected / updated code projects.
 
 
 MAIN.py (Release Testing)
 -------
-#2018/12/31: The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
+2018/12/31: The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
 If you want to support the effort, then purchase one of our training opportunuties, below.
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
