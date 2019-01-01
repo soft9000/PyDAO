@@ -1,8 +1,16 @@
 # PyDAO
-Generate a Python Class from either a textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
+This Soft9000/PyDAO project allows us to quickly create a Python Class from either a GUI, API, textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
-The generated code can be used to import, as well as work with (C.R.U.D and query using SQL SELECTions, 
-etc.) that data.
+The generated code can be used to create, import, as well as work with (C.R.U.D and query using SQL SELECTions, 
+etc.) the designed / detected / updated schema. Workflows include (1) creating stand-alone data projects, (2) extracting data projects from textual (CSV, etc.) data files, (3) creating database code from code projects, and (4) directly creating code from textual data files.
+
+
+MAIN.py (Release Testing)
+-------
+#2018/12/31: The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
+If you want to support the effort, then purchase one of our training opportunuties, below.
+
+PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
 
 
 API Example
@@ -12,8 +20,8 @@ For those who would rather create the DAO directly, without using a data file:
 Fast-Schema Example: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/Demo123.py
 
 
-EXAMPLE / TEST CASE
--------------------
+DATA EXAMPLE + TEST CASE
+------------------------
 Includes a classic "address book" example as a test case:
 
 Data Example: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/tc001_data.txt
@@ -23,21 +31,13 @@ Generated Code: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/
 
 STOCK MARKET
 ------------
-Python 1000, Python 2000, and Python 3000 students who are 
-participating in our Stock Market resume-builder will want 
+Python 1000, Python 2000, and Python 3000 students who are participating in our Stock Market resume-builder will want 
 to look at the NASDAQ database generator.
 
 Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
 
 While that stock exchange's official pipe-delimited ("enpiped" ;) data file is incuded for demonstrative
 purposes, note that the most recent set of enpiped data tokens can be downloaded from the stock exchange.
-
-MAIN.py (Release Testing)
--------
-The GUI is working well enough to declare what we have as an Alpha. Feel free to give it a try!
-If you want to support the effort, then purchase one of our training opportunuties, below.
-
-PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
 
 
 VIDEO TRAINING
