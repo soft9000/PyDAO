@@ -146,8 +146,8 @@ class TableDef():
 
         # Control Frame
         zLF2 = LabelFrame(zframe, text=" Fields ")
-        Button(zLF2, text="Define ...", width=10, command=self._on_def).pack()
-        Button(zLF2, text="Edit ...", width=10, command=self._on_edit).pack()
+        Button(zLF2, text="Define", width=10, command=self._on_def).pack()
+        Button(zLF2, text="Edit", width=10, command=self._on_edit).pack()
         Button(zLF2, text="Delete", width=10, command=self._on_delete).pack()
 
         zLF2.pack(side=LEFT, fill=BOTH)

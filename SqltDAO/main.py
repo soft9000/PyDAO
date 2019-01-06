@@ -112,7 +112,7 @@ class Main(Tk):
     
     def _on_save(self):
         if self.do_save() is True:
-            val = os.path.split(self.orderDef.file_name)
+            val = os.path.split(self.orderDef.project_name)
             messagebox.showinfo(
                 "Project Saved",
                 "Project file saved as " + val[-1] + " in preference location.")
