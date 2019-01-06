@@ -149,7 +149,7 @@ class Main(Tk):
     def _on_about(self):
         messagebox.showinfo(
             self.ztitle,
-            "Work In Progress - Not For Use")
+            "Mode: Cross-platform Testing")
 
     def _show_order(self):
         if not self.orderDef:
