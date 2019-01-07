@@ -5,6 +5,8 @@ Workflows include (1) creating stand-alone PyDAO projects, (2) extracting PyDAO 
 
 The generated code can be used to create / drop database schema (DDL,) as well as to import & work with (C.R.U.D & query) your designed / detected / updated projects.
 
+Project Video: https://youtu.be/azCokv4iI8k
+
 
 MAIN.py (Release Testing)
 -------
