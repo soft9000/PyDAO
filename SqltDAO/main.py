@@ -45,8 +45,8 @@ class Main(Tk):
                              ("Quit", self.destroy)]),
             )
         self.table_frame = None
-        self.orderDef = OrderDef()
         self.home = "."
+        self.orderDef = OrderDef(DataPrefrences.Load(self.home))
 
         '''
         activeBackground, foreground, selectColor,
@@ -67,7 +67,7 @@ class Main(Tk):
         self.project = askopenfilename(
             title="Open Project File",
             initialdir=pref['Projects'],
-            filetypes=[("PyDAO Project", OrderDef.FileType)]
+            ProjTypes=[("PyDAO Project", OrderDef.ProjType)]
             )
         if not self.project:
             return
@@ -136,10 +136,10 @@ class Main(Tk):
                 "Class created as " + val[-1] + " in preference location.")
 
     def _on_d2c(self):
-        Data2Code(self, verbose=True)
+        Data2Code(self, pref=DataPrefrences.Load(self.home), verbose=True)
 
     def _on_d2p(self):
-        Data2Code(self, gendef=True, verbose=True)
+        Data2Code(self, pref=DataPrefrences.Load(self.home), gendef=True, verbose=True)
 
     def _on_d2pref(self):
         zpref = DataPrefrences(self, self.home)

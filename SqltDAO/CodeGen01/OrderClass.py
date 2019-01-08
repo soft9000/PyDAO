@@ -26,12 +26,12 @@ class OrderClass:
         values = os.path.split(self._zdict['file_fname'])
         if not values:
             return False
-        self._zdict['file_fname'] = opred['Sql Folder'] + "/" + values[-1]
+        self._zdict['file_fname'] = opred['Code Folder'] + "/" + values[-1]
         
         values = os.path.split(self._zdict['db_fname'])
         if not values:
             return False
-        self._zdict['db_fname'] =  opred['Code Folder'] + "/" + values[-1]
+        self._zdict['db_fname'] =  opred['Sql Folder'] + "/" + values[-1]
         return True
 
     def __dict__(self):

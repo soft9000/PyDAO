@@ -22,37 +22,39 @@ class OrderDef():
     Note: Schema name will be used as the Database file + folder / archive name.
     '''
     NONAME          = "_-$junker!__.~"  # Invalid SQL name - for "must init" testing
-    FileType        = ".daop1"          # "Official Format, Version 1" - Always used.
+    ProjType        = ".daop1"          # "Official Format, Version 1" - Always used.
     DbType          = ".sqlt3"
     CodeType        = ".py"
     DEFAULT_SCHEMA  = "Default"
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     
-    def __init__(self, name=None):
-        self.zdict = OrderedDict()
+    def __init__(self, pref, name=None):
+        assert(isinstance(pref, dict))
         if not name:
             name = OrderDef.NONAME
+        self.zdict = OrderedDict()
         self.zdict['schema_name']   = name
         self.zdict['class_name']    = name
         self.zdict['file_fname']    = name
         self.zdict['db_fname']      = name
+        self.zdict['project_fname'] = name
+        self.home(pref, name=name)
         self.zdict_tables = OrderedDict()
 
-    def home(self, opred):
-        ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
+    def home(self, opred, name=None):
+        '''
+        Apply the artifact location-preferences (DataPrefrences) to this order.
+        Name will be honored when provided, else will re-use the present-encoded CLASS name.
         True if applied, False otherwise.'''
         if not isinstance(opred, dict):
             return False
+
+        if name is None:
+            name = self.zdict['class_name']
         
-        values = os.path.split(self.zdict['file_fname'])
-        if not values:
-            return False
-        self.zdict['file_fname'] = opred['Sql Folder'] + "/" + values[-1]
-        
-        values = os.path.split(self.zdict['db_fname'])
-        if not values:
-            return False
-        self.zdict['db_fname'] =  opred['Code Folder'] + "/" + values[-1]
+        self.zdict['file_fname']    = opred['Code Folder'] + "/" + name
+        self.zdict['project_fname'] = opred['Projects'] + "/" + name
+        self.zdict['db_fname']      = opred['Sql Folder'] + "/" + name
         return True
 
     @property
@@ -70,7 +72,7 @@ class OrderDef():
     @property
     def project_name(self):
         ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
-        return self.zdict['file_fname'] + OrderDef.FileType
+        return self.zdict['project_fname'] + OrderDef.ProjType
 
     @property
     def code_name(self):
@@ -80,7 +82,7 @@ class OrderDef():
     @property
     def db_name(self):
         ''' Concoct a file-name from the schema name. Asserts DEFAULT_SCHEMA if not defined.'''
-        return self.zdict['file_fname'] + OrderDef.DbType
+        return self.zdict['db_fname'] + OrderDef.DbType
 
     @property
     def schema_name(self):
@@ -159,16 +161,20 @@ class OrderDef():
         return OrderDef.SaveFile(self)
 
     @staticmethod
-    def Create(order_class, fields):
+    def Create(pref, order_class, fields):
         ''' Create an OrderDef from an OrderClass + Fields. Raise an exception on error. '''
         if isinstance(order_class, OrderClass) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
         if not fields:
             raise TypeError("Error: No fields detected.")
-        result = OrderDef()
+        result = OrderDef(pref)
         data = order_class.__dict__()
         for key in data:
             result.zdict[key] = data[key]
+        result.zdict['schema_name'] = data['class_name']
+        result.zdict['project_fname'] = data['class_name']
+        result.home(pref)
+        
         ztable = TableDef(name=order_class.table_name)
         for field in fields:
             if ztable.add_field(field[0], field[1]) is False:
@@ -208,7 +214,7 @@ class OrderDef():
             file_name=pref['Projects'] + "/" + table_name + ".py")
             
     @staticmethod
-    def LoadFile(fq_file):
+    def LoadFile(fq_file, pref):
         ''' Will always return an Instance, else False
         '''
         if not os.path.exists(fq_file):
@@ -218,7 +224,7 @@ class OrderDef():
                 data = fh.readline()
                 data = data.strip()
                 zdict = eval(data)
-                result = OrderDef()
+                result = OrderDef(pref)
                 for key in zdict:
                     if key == OrderDef.IOKEY:
                         pw_def = TableDef(name=OrderDef.NONAME)
@@ -256,8 +262,8 @@ class OrderDef():
         '''
         if not isinstance(loaded_obj, OrderDef):
             return False
-        if not fq_file.endswith(OrderDef.FileType):
-            fq_file = fq_file + OrderDef.FileType
+        if not fq_file.endswith(OrderDef.ProjType):
+            fq_file = fq_file + OrderDef.ProjType
         bExists = os.path.exists(fq_file)
         if bExists and overwrite is False:
             return False
@@ -280,8 +286,9 @@ class OrderDef():
 
 
 if __name__ == "__main__":
-    ''' A few basic test cases ... '''    
-    zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
+    ''' A few basic test cases ... '''
+    pref = DataPrefrences.Load('.')
+    zorder = OrderDef(pref, name=OrderDef.DEFAULT_SCHEMA)
     zname = zorder.project_name
     print("zname", zname)
     if os.path.exists(zname):
@@ -303,7 +310,7 @@ if __name__ == "__main__":
     
     assert(OrderDef.SaveFile(zorder))
     
-    zorder2 = OrderDef.LoadFile(zname)
+    zorder2 = OrderDef.LoadFile(zname, DataPrefrences.Load('.'))
     # print("zorder2:\n", zorder2, '\n')
     assert(zorder2 is not False)
     assert(str(zorder) == str(zorder2))
@@ -314,7 +321,7 @@ if __name__ == "__main__":
     odd = OrderDef.Extract(zorder2, DataPrefrences.Load("."))
     print(odd)
 
-    os.unlink(zorder.file_name)
+    os.unlink(zorder.project_name)
     
     
 

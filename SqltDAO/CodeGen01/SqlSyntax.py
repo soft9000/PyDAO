@@ -11,13 +11,20 @@ from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
 
 class SqliteCrud:
+    ''' Translates OrderClass + Fields into python source code. No files are created. '''
 
     def __init__(self, order, fields):
+        ''' Set-up class with an OrderClass and SQL Table-fields.
+        Will raise an exception when proper types are not provided.
+        '''
+        assert(isinstance(order, OrderClass))
+        assert(fields)
         self.order = order
         self.fields = fields
         self.level = CodeLevel()
 
-    def code_class_template(self, data_file, sep=','):
+    def code_class_template(self, text_file, sep=','):
+        ''' Translate a local order into Python code. Returns created source-code. '''
         import time
         from SqltDAO.CodeGen01.Meta import Meta
         self.level.set(0)
@@ -137,12 +144,12 @@ class SqliteCrud:
 
         self.level.push()
         result += self.level.print("@staticmethod")
-        result += self.level.print("def Import(dao, data_file='" + data_file + "', hasHeader=True, sep='" + sep + "'):")
+        result += self.level.print("def Import(dao, text_file='" + text_file + "', hasHeader=True, sep='" + sep + "'):")
         self.level.inc()
         result += self.level.print("try:")
         self.level.inc()
         result += self.level.print('# dao.open()')
-        result += self.level.print("with open(data_file) as fh:")
+        result += self.level.print("with open(text_file) as fh:")
         self.level.inc()
         result += self.level.print("line = fh.readline().strip()")
         result += self.level.print("if hasHeader is True:")
@@ -175,6 +182,7 @@ class SqliteCrud:
 
 
     def sql_create_table(self):
+        ''' Translate the order into a field-driven SQL Table creation statement. '''
         result = "CREATE TABLE IF NOT EXISTS " + self.order.table_name
         result = result + '(ID INTEGER PRIMARY KEY AUTOINCREMENT,'
         for ss, val in enumerate(self.fields):
@@ -187,6 +195,7 @@ class SqliteCrud:
 
 
     def sql_insert_row(self):
+        ''' Translate the order into a field-driven SQL Row creation statement. '''
         result = "INSERT INTO " + self.order.table_name + " ("
         for val in self.fields:
             result += ' '

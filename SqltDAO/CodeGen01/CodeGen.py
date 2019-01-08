@@ -13,12 +13,15 @@ from SqltDAO.SchemaDef.Order import OrderDef
 from SqltDAO.CodeGen01.DaoExceptions import *
 from SqltDAO.CodeGen01.SqlDetect import SqlDetect
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
 
 
 class DaoGen:
 
-    def __init__(self):
-        pass
+    def __init__(self, pref=None):
+        if not pref:
+            pref = DataPreferences.Load(".")
+        self.pref = pref
 
     def get_fields(self, order, data_file, sep=','):
         '''
@@ -34,11 +37,11 @@ class DaoGen:
         if header is None:
             raise IOError("Header not found.")
         fields = SqlDetect.GetFields(data_file, sep=sep)
-        result = OrderDef.Create(order, fields)
-        return fields, result
+        order_def = OrderDef.Create(self.pref, order, fields)
+        return fields, order_def
 
     def gen_code(self, order, data_file, sep=','):
-        ''' Detect tables & save THE CODE for a given a data_file.
+        ''' Detect tables & GET the CODE for a given a data_file.
         True or Exception returned.
         '''
         fields, order2 = self.get_fields(order, data_file, sep)
@@ -47,20 +50,20 @@ class DaoGen:
         sql = SqliteCrud(order, fields)
         return sql.code_class_template(data_file, sep=sep)
 
-    def gen_order(self, order, data_file, sep=','):
-        ''' Detect tables & write THE ORDER FILE for a given data_file.
+    def gen_order(self, order, text_file, sep=','):
+        ''' Detect tables & WRITE the ORDER FILE for a given data_file.
         True or Exception returned.
         '''
-        fields, order2 = self.get_fields(order, data_file, sep)
+        fields, order2 = self.get_fields(order, text_file, sep)
         if fields is None:
            raise GenException("Error: SqlDetect.GetFields has None.")
         return OrderDef.SaveFile(order2, overwrite=True)
 
-    def write_code(self, order, data_file, sep=','):
+    def write_code(self, order, text_file, sep=','):
         ''' Write CODE from an OrderClass using data from an arbitrary input / data_file.
         True or Exception returned.
         '''
-        source = self.gen_code(order, data_file, sep=sep)
+        source = self.gen_code(order, text_file, sep=sep)
         with open(order.file_name, "w") as fh:
             fh.write(source)
             return True

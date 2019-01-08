@@ -19,17 +19,18 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.SchemaDef.Order import OrderDef
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.CodeGen01.CodeGen import DaoGen
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
 
 from collections import OrderedDict
 
 class Data2Code(simpledialog.Dialog):
 
-    def __init__(self, parent, gendef=False, verbose=False):
+    def __init__(self, parent, pref, gendef=False, verbose=False):
         self.gen_ok = False
         self.gendef = gendef
         self.verbose = verbose
         self.ztitle = "Text Table Tool, Rev 0.1"
-        self.order_info = None
+        self.order_class = None
         self.file_name = StringVar()
         self.file_name.set(" ")
         self.field_sel = StringVar()
@@ -42,6 +43,11 @@ class Data2Code(simpledialog.Dialog):
         self.field_sel = IntVar()
         self.field_sel.set(0)
 
+        if not pref:
+            self.pref = DataPrefrences.Load('.')
+        else:
+            self.pref = pref
+
         self.display_info = OrderedDict()
         dum = dict(OrderClass())
         for key in dum:
@@ -49,38 +55,44 @@ class Data2Code(simpledialog.Dialog):
         super().__init__(parent=parent)
 
     def _show_order(self):
-        zdict = dict(self.order_info)
+        zdict = dict(self.order_class)
         for key in zdict:
             self.display_info[key].set(zdict[key])
 
     def on_txt_fn(self):
         self.attributes('-topmost',False)
-        fn = askopenfilename()
-        if len(fn):
-            self.file_name.set(fn)
+        fn = askopenfilename(
+            title="Open Text File",
+            initialdir=self.pref['Csv Folder'])
+        if not len(fn):
+            return
+        self.file_name.set(fn)
         self.attributes('-topmost',True)
         fbase = os.path.splitext(fn)[0]
         nodes = os.path.split(fn)
         fname = nodes[-1]
         subject = os.path.splitext(fname)[0]
-        self.order_info = OrderClass(
+        self.order_class = OrderClass(
             class_name=subject,
             table_name=subject,
             db_name=fbase + ".sqlt3",
             file_name=fbase + ".py")
+        zhome = dict(self.pref)
+        zhome['Csv Folder'] = os.path.dirname(fn)
+        self.order_class.home(zhome)
         self._show_order()
 
     def _create_project(self, zsel):
-        gen = DaoGen()
+        gen = DaoGen(self.pref)
         self.gen_ok = gen.gen_order(
-            self.order_info,
+            self.order_class,
             self.file_name.get(), sep=zsel[2])
         return self.gen_ok
 
     def _create_code(self, zsel):
-        gen = DaoGen()
+        gen = DaoGen(self.pref)
         self.gen_ok = gen.write_code(
-            self.order_info,
+            self.order_class,
             self.file_name.get(), sep=zsel[2])
         return self.gen_ok
 
@@ -145,7 +157,7 @@ class Data2Code(simpledialog.Dialog):
 if __name__ == "__main__":
     zroot = Tk(useTk=1)
     zroot.tk_setPalette(background="Light Green")
-    zworks = Data2Code(parent=zroot, verbose=True, gendef=False)
+    zworks = Data2Code(parent=zroot, pref=None, verbose=True, gendef=True)
     zroot.destroy()
     if zworks.gen_ok:
         print("gen okay")

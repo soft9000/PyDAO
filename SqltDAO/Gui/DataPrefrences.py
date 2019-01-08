@@ -41,7 +41,9 @@ class Dp1(simpledialog.Dialog):
 
     def get_folder(self, key):
         var = self.options[key].get()
+        self.attributes('-topmost',False)
         var = askdirectory(initialdir=var)
+        self.attributes('-topmost',True)
         if not var:
             return
         self.options[key].set(var)
