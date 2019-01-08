@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+
 from SqltDAO.DaoTest01.NasdaqDAO import NasdaqDAO
 
 test = NasdaqDAO()
