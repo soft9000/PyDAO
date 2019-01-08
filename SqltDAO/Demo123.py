@@ -73,6 +73,50 @@ except:
 # STEP 3: Enjoy!
 # ######
 
+from SqltDAO.CodeGen01.OrderClass import OrderClass
+from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
+
+
+for line in tables:
+    zname = line["ObjectName"]
+    print("Table:", zname)
+    order = OrderClass(
+        db_name=output_file + ".sqlt3",
+        class_name=zname,
+        table_name=zname,
+        file_name="./" + zname + ".py")
+    zfields = line["Fields"]
+    sql = SqliteCrud(order, zfields)
+    data_file = str(zname + '.csv')
+    result = sql.code_class_template(data_file, sep='","')
+    with open(output_file + ".py", 'a') as fh:
+        print(result, file=fh)
+
+entry["Description"]         = "Official status / log entry"
+entry["Fields"]              = [('DateTime','Text'),
+                                ('ObjectName', 'Text'),
+                                ('ObjectId', 'Integer'),
+                                ('Description', 'Text')
+                                ]
+
+tables = [employee, principal, event, todo, entry]
+
+# ######
+# STEP 2: Define your artifact (code and database) names
+# ######
+
+output_file = "./~CrudMeister"
+try:
+    import os
+    os.remove(output_file + '.py')
+    # os.remove(output_file + '.sqlt3')
+except:
+    pass
+
+# ######
+# STEP 3: Enjoy!
+# ######
+
 from CodeGen01.OrderClass import OrderClass
 from CodeGen01.SqlSyntax import SqliteCrud    
 for line in tables:
