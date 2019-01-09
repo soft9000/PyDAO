@@ -10,7 +10,7 @@ class InspectorCSV:
     to a FIXED_TAB or FIXED_PIPE format.
     '''
 
-    FIXED_TAB =  ("/t", ".fxtab")
+    FIXED_TAB =  ("\t", ".fxtab")
     FIXED_PIPE = ("|", ".fxpip")
     ENCODINGS = (None, 'utf-8', 'utf-16')
 
