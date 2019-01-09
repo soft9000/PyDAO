@@ -6,7 +6,7 @@ import csv
 class InspectorCSV:
     '''
     What to do when the user selects 'csv,' but things go boom.
-    Emphasiss is upon Unicode detection + data-file conversion / re-writing
+    Emphasis is upon Unicode detection + data-file conversion / re-writing
     to a FIXED_TAB or FIXED_PIPE format.
     '''
 
@@ -56,7 +56,7 @@ class InspectorCSV:
     @staticmethod
     def Tally(fqfile, line_max=-1):
         '''
-        Check to see how many lines are in a data-file.
+        Check to see how many lines (#) are in a data-file.
         Use line_max to prevent huge line-scans.
         Safe function - no exceptions are thrown.
         Result examples:
@@ -114,7 +114,11 @@ class InspectorCSV:
     def Sniff(fqfile, max_lines=20):
         '''
         Use the CSV 'Sniffer. Will not work on piped data.
-        Returns strinigified dialect detected, or None
+        Returns strinigified dialect detected, or None.
+        No exceptions are thrown.
+        Successfull result examples:
+            (#, None) = Default encoding (classic bytes)
+            (#, 'utf-8') = Unicode encoding (8 / 16 supported)
         '''
         if not fqfile:
             return None
@@ -199,9 +203,11 @@ class InspectorCSV:
         
         raise Exception("File format error.")
 
-#R-n-D: Please ignore.
-#file = 'C:/Users/Randall/Desktop/ProdSet/_etc/PyDAO-Student-Stats/RawData/Udemy/Py1200_Practice_2019-01-08_10-33-57.csv'
-#print(InspectorCSV.Convert(file, InspectorCSV.FIXED_TAB))
-#file = 'C:/Users/Randall/Desktop/ProdSet/_etc/PyDAO-master/SqltDAO/DaoTest01/nasdaqlisted.txt'
-#print(InspectorCSV.Sniff(file))
-print(InspectorCSV.Tally(file))
+
+if __name__ == "__main__":
+    #R-n-D: Please ignore.
+    #file = '../../../PyDAO-Student-Stats/RawData/Udemy/Py1200_Practice_2019-01-08_10-33-57.csv'
+    #print(InspectorCSV.Convert(file, InspectorCSV.FIXED_TAB))
+    file = '../DaoTest01/nasdaqlisted.txt'
+    #print(InspectorCSV.Sniff(file))
+    print(InspectorCSV.Tally(file))
