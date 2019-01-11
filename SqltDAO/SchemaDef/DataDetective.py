@@ -1,7 +1,70 @@
 #!/usr/bin/env python3
 
+# 2019/01/07: Class Created
+# Status: Work-In-Progress
+#         - Refactored + minor updates. Code paths needs re-testing.
+
 import os.path
 import csv
+
+class Inspector:
+    '''
+    Line oriented: A field-independant way to scan for the
+    encoding + successfull reading of a partial / complete,
+    textual, data-file.
+    '''
+    ENCODINGS = (None, 'utf-8', 'utf-16')    
+        
+    @staticmethod
+    def _count_lines(fh, line_max=-1):
+        ''' internal use only '''
+        result = 0
+        bokay = False
+        if fh:
+            try:
+                for line in fh:
+                    result += 1
+                    if line_max >= 0:
+                        if result >= line_max:
+                            break
+                bokay = True
+            except:
+                pass
+        return result, bokay
+
+
+    @staticmethod
+    def Tally(fqfile, line_max=-1):
+        '''
+        Check to see how many lines (#) are in a data-file.
+        The 2nd result is the file encoding. None = Classic / ASCII encoding.
+        The 3rd result indicates if the file was read completely ('toeof.')
+
+        Use line_max to prevent huge line-scans. 
+        
+        Safe function - no exceptions are thrown.
+        
+        Result examples:
+            (#, None, toeof)    = Default encoding (classic bytes)
+            (#, 'utf-8', toeof) = Unicode encoding (8 / 16 supported)
+        '''
+        rtype = None
+        zmax = 0
+        bokay = False
+        for ztype in Inspector.ENCODINGS:
+            try:
+                fh = InspectorCSV._open(fqfile, ztype)
+                count = Inspector._count_lines(fh, line_max)
+                if count[0] > zmax:
+                    zmax  = count[0]
+                    bokay = count[1]
+                    rtype = ztype
+            except:
+                pass
+            
+        return zmax, rtype, bokay
+
+
 
 class InspectorCSV:
     '''
@@ -12,7 +75,6 @@ class InspectorCSV:
 
     FIXED_TAB =  ("\t", ".fxtab")
     FIXED_PIPE = ("|", ".fxpip")
-    ENCODINGS = (None, 'utf-8', 'utf-16')
 
     @staticmethod
     def _encode(dlct):
@@ -37,54 +99,15 @@ class InspectorCSV:
             return open(fqfile, 'r', encoding=ztype)
         else:
             return open(fqfile, 'r')
-        
-    @staticmethod
-    def _count_lines(fh, line_max=-1):
-        ''' internal use only '''
-        result = 0
-        if fh:
-            try:
-                for line in fh:
-                    result += 1
-                    if line_max >= 0:
-                        if result >= line_max:
-                            break
-            except:
-                pass
-        return result
 
     @staticmethod
-    def Tally(fqfile, line_max=-1):
-        '''
-        Check to see how many lines (#) are in a data-file.
-        Use line_max to prevent huge line-scans.
-        Safe function - no exceptions are thrown.
-        Result examples:
-            (#, None) = Default encoding (classic bytes)
-            (#, 'utf-8') = Unicode encoding (8 / 16 supported)
-        '''
-        rtype = None
-        zmax = 0
-        for ztype in InspectorCSV.ENCODINGS:
-            try:
-                fh = InspectorCSV._open(fqfile, ztype)
-                count = InspectorCSV._count_lines(fh, line_max)
-                if count > zmax:
-                    zmax = count
-                    rtype = ztype
-            except:
-                pass
-            
-        return zmax, rtype
-
-    @staticmethod
-    def Detect(fqfile):
+    def Detect(fqfile, max_lines=20):
         '''
         Detect file type, as well as how many lines can be read from same.
         Exception on error, else tuple with number read (#,) and encoding.
         Successfull result examples:
-            (#, None) = Default encoding (classic bytes)
-            (#, 'utf-8') = Unicode encoding (8 / 16 supported)
+            (#, None, toeof)    = Default encoding (classic bytes)
+            (#, 'utf-8', toeof) = Unicode encoding (8 / 16 supported)
         '''
         if not fqfile:
             raise Exception("Input file is 'None'")
@@ -92,14 +115,16 @@ class InspectorCSV:
             raise Exception("Input file not found")
         max_read = 0
         encoding = None
+        bokay = False
         fh = None
-        for ztype in InspectorCSV.ENCODINGS:
+        for ztype in Inspector.ENCODINGS:
             try:
                 result = 0
                 fh = InspectorCSV._open(fqfile, ztype)
-                result = InspectorCSV._count_lines(fh)                
-                if result > max_read:
-                    max_read = result
+                result = Inspector._count_lines(fh, line_max=max_lines)                
+                if result[0] > max_read:
+                    max_read = result[0]
+                    bokay    = result[1]
                     encoding = ztype
             except:
                 if fh:
@@ -108,7 +133,7 @@ class InspectorCSV:
                     except:
                         pass
                 continue # Next encoding!
-        return max_read, encoding
+        return max_read, encoding, bokay
 
     @staticmethod
     def Sniff(fqfile, max_lines=20):
@@ -116,28 +141,35 @@ class InspectorCSV:
         Use the CSV 'Sniffer. Will not work on piped data.
         Returns strinigified dialect detected, or None.
         No exceptions are thrown.
+
         Successfull result examples:
-            (#, None) = Default encoding (classic bytes)
-            (#, 'utf-8') = Unicode encoding (8 / 16 supported)
+            (#, None, toeof)    = Default encoding (classic bytes)
+            (#, 'utf-8', toeof) = Unicode encoding (8 / 16 supported)
         '''
         if not fqfile:
             return None
         popSel = dict()
-
+        bokay = False
         fh = None
-        for ztype in InspectorCSV.ENCODINGS:
+        for ztype in Inspector.ENCODINGS:
             try:
                 pop = dict()
                 result = 0
                 fh = InspectorCSV._open(fqfile, ztype)
-                zcount = InspectorCSV._count_lines(fh)
-                if not zcount:
+                zcount = Inspector._count_lines(fh, line_max=max_lines)
+                try:
+                    fh.close()
+                except:
+                    pass
+
+                if not zcount[0]: # no lines
                     continue
-                fh.close()
+                if not zcount[1]: # no completion
+                    continue
                 
                 total = max_lines
-                if total > zcount:
-                    total = zcount
+                if total > zcount[0]:
+                    total = zcount[0]
                     
                 sn = csv.Sniffer()
                 fh = InspectorCSV._open(fqfile, ztype)
@@ -153,7 +185,9 @@ class InspectorCSV:
                             pop[code] = 1
                 fh.close()
                 popSel = pop
+                bokay = True
             except Exception as ex:
+                bokay = False
                 continue
             finally:
                 if fh:
@@ -168,7 +202,7 @@ class InspectorCSV:
             if popSel[key] > zmax:
                 zmax = popSel[key]
                 result = key
-        return zmax, result
+        return zmax, result, bokay
 
     @staticmethod
     def Convert(fqfile, sep=FIXED_PIPE):
@@ -176,7 +210,7 @@ class InspectorCSV:
         Copy a data-file using a unified delimiter + factorized file-type suffix.
         Exception on error, else tuple with total lines (#), encoding, and result-file name.
         Successfull result examples:
-            (#, None, fq_output) = Default encoding (classic bytes)
+            (#, None, fq_output)    = Default encoding (classic bytes)
             (#, 'utf-8', fq_output) = Unicode encoding (8 / 16 supported)
         '''
         try:
@@ -210,4 +244,4 @@ if __name__ == "__main__":
     #print(InspectorCSV.Convert(file, InspectorCSV.FIXED_TAB))
     file = '../DaoTest01/nasdaqlisted.txt'
     #print(InspectorCSV.Sniff(file))
-    print(InspectorCSV.Tally(file))
+    print(Inspector.Tally(file))
