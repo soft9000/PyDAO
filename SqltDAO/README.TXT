@@ -22,6 +22,13 @@ GUI Quick Start
     Example: python C:\Study\PyDAO-master\SqltDAO\main.py
 (6) Use Soft9000/PyDAO
     Video: https://youtu.be/azCokv4iI8k
+    
+Known Limitations
+=================
+Support is in the works for:
+    o Unicode
+    o Asymmetrical CSV
+See ./SchemaDef/DataDetective.py for the finalized R&D results.
 
 API Example:
 ===========
