@@ -25,7 +25,7 @@ class DaoGen:
 
     def get_fields(self, order, data_file, sep=','):
         '''
-        Populate an OrderDef using a OrderClass + data_file.
+        Populate an OrderDef using an OrderClass + data_file.
         Returns OrderDef + Fields detected upon success,
         or an Exception on error.
         '''

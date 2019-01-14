@@ -6,7 +6,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from collections import OrderedDict
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences, Preferences
 
 class OrderClass:
 
@@ -20,7 +20,7 @@ class OrderClass:
     def home(self, opred):
         ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
         True if applied, False otherwise.'''
-        if not isinstance(opred, dict):
+        if not isinstance(opred, Preferences):
             return False
         
         values = os.path.split(self._zdict['file_fname'])

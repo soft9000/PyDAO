@@ -77,24 +77,30 @@ class Data2Code(simpledialog.Dialog):
             table_name=subject,
             db_name=fbase + ".sqlt3",
             file_name=fbase + ".py")
-        zhome = dict(self.pref)
-        zhome['Csv Folder'] = os.path.dirname(fn)
-        self.order_class.home(zhome)
+        self.pref['Csv Folder'] = os.path.dirname(fn)
+        self.order_class.home(self.pref)
         self._show_order()
+
+    def can_create(self, gen):
+        return True # TODO: Check for input & output file existance
 
     def _create_project(self, zsel):
         gen = DaoGen(self.pref)
-        self.gen_ok = gen.gen_order(
-            self.order_class,
-            self.file_name.get(), sep=zsel[2])
-        return self.gen_ok
+        if self.can_create(gen):
+            self.gen_ok = gen.gen_order(
+                self.order_class,
+                self.file_name.get(), sep=zsel[2])
+            return self.gen_ok
+        return False
 
     def _create_code(self, zsel):
         gen = DaoGen(self.pref)
-        self.gen_ok = gen.write_code(
-            self.order_class,
-            self.file_name.get(), sep=zsel[2])
-        return self.gen_ok
+        if self.can_create(gen):
+            self.gen_ok = gen.write_code(
+                self.order_class,
+                self.file_name.get(), sep=zsel[2])
+            return self.gen_ok
+        return False
 
     def apply(self):
         zsel = self.field_seps[int(self.field_sel.get())]

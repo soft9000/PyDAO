@@ -15,7 +15,7 @@ from SqltDAO.SchemaDef.Table import TableDef
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences, Preferences
 
 class OrderDef():
     ''' Basic Factory-Order definition, multiple tables.
@@ -29,7 +29,7 @@ class OrderDef():
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     
     def __init__(self, pref, name=None):
-        assert(isinstance(pref, dict))
+        assert(isinstance(pref, Preferences))
         if not name:
             name = OrderDef.NONAME
         self.zdict = OrderedDict()
@@ -46,12 +46,11 @@ class OrderDef():
         Apply the artifact location-preferences (DataPrefrences) to this order.
         Name will be honored when provided, else will re-use the present-encoded CLASS name.
         True if applied, False otherwise.'''
-        if not isinstance(opred, dict):
+        if not isinstance(opred, Preferences):
             return False
 
         if name is None:
             name = self.zdict['class_name']
-        
         self.zdict['file_fname']    = opred['Code Folder'] + "/" + name
         self.zdict['project_fname'] = opred['Projects'] + "/" + name
         self.zdict['db_fname']      = opred['Sql Folder'] + "/" + name
@@ -166,7 +165,7 @@ class OrderDef():
         if isinstance(order_class, OrderClass) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
         if not fields:
-            raise TypeError("Error: No fields detected.")
+            fields = dict()
         result = OrderDef(pref)
         data = order_class.__dict__()
         for key in data:
@@ -174,6 +173,7 @@ class OrderDef():
         result.zdict['schema_name'] = data['class_name']
         result.zdict['project_fname'] = data['class_name']
         result.home(pref)
+        result.zdict['db_fname'] = data['db_fname']
         
         ztable = TableDef(name=order_class.table_name)
         for field in fields:
@@ -187,8 +187,8 @@ class OrderDef():
         ''' Extract an OrderClass from an OrderDef. Raise an exception on error.'''
         if isinstance(order_def, OrderDef) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
-        if isinstance(pref, dict) is False:
-            raise TypeError("Error: Dictionary of DataPrefrences is required.")
+        if isinstance(pref, Preferences) is False:
+            raise TypeError("Error: DataPrefrences.Preferences is required.")
         for key in order_def.zdict:
             if order_def.zdict[key] == OrderDef.NONAME:
                 raise TypeError("Error: Please define a '" + key + "' value.")
@@ -210,8 +210,8 @@ class OrderDef():
         return OrderClass(
             class_name=table_name,
             table_name=table_name,
-            db_name=pref['Csv Folder'] + "/" + table_name + ".sqlt3",
-            file_name=pref['Projects'] + "/" + table_name + ".py")
+            db_name=pref['Csv Folder'] + "/" + table_name + OrderDef.DbType,
+            file_name=pref['Projects'] + "/" + table_name + OrderDef.CodeType)
             
     @staticmethod
     def LoadFile(fq_file, pref):

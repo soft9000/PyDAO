@@ -67,11 +67,11 @@ class Main(Tk):
         self.project = askopenfilename(
             title="Open Project File",
             initialdir=pref['Projects'],
-            ProjTypes=[("PyDAO Project", OrderDef.ProjType)]
+            filetypes=[("PyDAO Project", OrderDef.ProjType)]
             )
         if not self.project:
             return
-        zdef = OrderDef.LoadFile(self.project)
+        zdef = OrderDef.LoadFile(self.project, DataPrefrences.Load(self.home))
         if not zdef:
             messagebox.showerror(
                 "Schema File / Format Error",
@@ -91,7 +91,7 @@ class Main(Tk):
                 "No Data",
                 "Schema Definition Required.")
             return False
-        self.orderDef = OrderDef(name=ztbl.get_table_name())
+        self.orderDef = OrderDef(DataPrefrences.Load(self.home), name=ztbl.get_table_name())
         if not self.orderDef.add_table(ztbl):
             messagebox.showerror(
                 "Invalid Table",

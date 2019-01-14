@@ -19,7 +19,21 @@ from collections import OrderedDict
 
 from SqltDAO.Gui.StandardEntry import LabelEntryAction
 
+class Preferences:
+    ''' Opportunity to create an official class to manage those
+    final resting places. '''
 
+    def __init__(self, zdict):
+        self.zdict = zdict
+        
+    def __getitem__(self, key):
+        ''' Classic usage requires that we make it scriptable... '''
+        return self.zdict[key]
+        
+    def __setitem__(self, key, value):
+        ''' Classic usage requires that we make it scriptable... '''
+        self.zdict[key] = value
+    
 
 class Dp1(simpledialog.Dialog):
 
@@ -114,12 +128,12 @@ class Dp1(simpledialog.Dialog):
         ofile = home_dir + '/' + Dp1.FILE_NAME
         try:
             with open(ofile) as fh:
-                return eval(fh.readline())
+                return Preferences(eval(fh.readline()))
         except:
             result = OrderedDict()
             for key in Dp1.KEYS:
                 result[key] = home_dir
-            return result
+            return Preferences(result)
 
 
 
