@@ -26,6 +26,11 @@ class Preferences:
     def __init__(self, zdict):
         self.zdict = zdict
         
+    def __iter__(self):
+        ''' Classic usage requires that we make it scriptable... '''
+        for key in self.zdict.keys():
+            yield key
+        
     def __getitem__(self, key):
         ''' Classic usage requires that we make it scriptable... '''
         return self.zdict[key]
@@ -139,6 +144,13 @@ class Dp1(simpledialog.Dialog):
 
 if __name__ == "__main__":
     ''' Manual testing '''
+    try:
+        zdict = Preferences({"One":"Ima One", "Two":"We Be Two"})
+        for key in zdict:
+            print(zdict[key])
+    except Exception as ex:
+        raise ex
+    
     zroot = Tk()
     zword = Dp1(zroot, '.')
     zroot.mainloop()
