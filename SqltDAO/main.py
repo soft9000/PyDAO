@@ -19,7 +19,6 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.SchemaDef.Factory import Factory1
-from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 from SqltDAO.Gui.Data2Code import Data2Code
 from SqltDAO.Gui.StandardEntry import LabelEntry
@@ -38,7 +37,7 @@ class Main(Tk):
         self.zoptions = (
             ("Projects",    [("Open Project...", self._on_open),
                              ("Save Project...", self._on_save),
-                             ("Create Code", self._on_create)],),
+                             ("Create Code", self._on_code_create)],),
             ("Tools",       [("Data2Code...", self._on_d2c),
                              ("Data2Project...", self._on_d2p),
                              ("Preferences...", self._on_d2pref)]),
@@ -113,7 +112,8 @@ class Main(Tk):
                 "Project Saved",
                 "Project file saved as " + val[-1] + " in preference location.")
 
-    def _on_create(self):
+    def _on_code_create(self):
+        ''' Generate Python code '''
         if self.do_save() is True:
             pref = DataPreferences.Load(self.home)
             order_class = Factory1.Extract(self.order_def, pref)
@@ -123,7 +123,9 @@ class Main(Tk):
             for row in table_def:
                 zfields[row[1]] = row[2]
             sql = SqliteCrud(order_class, zfields)
-            zcode = sql.code_class_template(self.order_def.database_name, sep='","')
+            zcode = sql.code_class_template(
+                self.order_def.database_name + OrderDef.TEXT_DATA_TYPE,
+                sep='","')
             with open(self.order_def.code_name, 'w') as fh:
                 print(zcode, file=fh)
             val = os.path.split(self.order_def.code_name)
