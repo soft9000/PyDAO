@@ -6,7 +6,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from collections import OrderedDict
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences, Preferences
+from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences, Preferences
 
 class OrderClass:
 
@@ -14,8 +14,8 @@ class OrderClass:
         self._zdict = OrderedDict()
         self._zdict['class_name'] = class_name
         self._zdict['table_name'] = table_name
-        self._zdict['file_fname'] = file_name
-        self._zdict['db_fname']   = db_name
+        self._zdict['code_fname'] = file_name
+        self._zdict['db_fname'] = db_name
 
     def home(self, opred):
         ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
@@ -23,10 +23,10 @@ class OrderClass:
         if not isinstance(opred, Preferences):
             return False
         
-        values = os.path.split(self._zdict['file_fname'])
+        values = os.path.split(self._zdict['code_fname'])
         if not values:
             return False
-        self._zdict['file_fname'] = opred['Code Folder'] + "/" + values[-1]
+        self._zdict['code_fname'] = opred['Code Folder'] + "/" + values[-1]
         
         values = os.path.split(self._zdict['db_fname'])
         if not values:
@@ -99,13 +99,13 @@ class OrderClass:
 
     @property
     def file_name(self):
-        return self._zdict['file_fname']
+        return self._zdict['code_fname']
 
     @file_name.setter
     def file_name(self, name):
         if name is not None:
             try:
-                self._zdict['file_fname'] = name
+                self._zdict['code_fname'] = name
                 return True
             except:
                 pass

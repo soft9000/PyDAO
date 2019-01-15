@@ -9,62 +9,62 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.SchemaDef.Order import OrderDef
+from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
+from SqltDAO.SchemaDef.Factory import Factory1
 from SqltDAO.CodeGen01.DaoExceptions import *
 from SqltDAO.CodeGen01.SqlDetect import SqlDetect
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
 
 
 class DaoGen:
 
-    def __init__(self, pref=None):
-        if not pref:
-            pref = DataPreferences.Load(".")
-        self.pref = pref
-
-    def get_fields(self, order, data_file, sep=','):
+    def __init__(self):
+        pass
+    
+    def get_fields(self, order_class, text_data_file, sep=','):
         '''
-        Populate an OrderDef using an OrderClass + data_file.
+        Populate an OrderDef using an OrderClass + text_data_file.
         Returns OrderDef + Fields detected upon success,
         or an Exception on error.
         '''
-        if isinstance(order, OrderClass) is False:
+        if isinstance(order_class, OrderClass) is False:
             raise TypeError("Instance of OrderClass is required.")
-        if os.path.exists(data_file) is False:
+        if os.path.exists(text_data_file) is False:
             raise IOError("Data file not found.")
-        header = SqlDetect.GetHeader(data_file, sep=sep)
+        header = SqlDetect.GetHeader(text_data_file, sep=sep)
         if header is None:
             raise IOError("Header not found.")
-        fields = SqlDetect.GetFields(data_file, sep=sep)
-        order_def = OrderDef.Create(self.pref, order, fields)
+        fields = SqlDetect.GetFields(text_data_file, sep=sep)
+        order_def = Factory1.Create(order_class, fields)
         return fields, order_def
 
-    def gen_code(self, order, data_file, sep=','):
-        ''' Detect tables & GET the CODE for a given a data_file.
+    def gen_code(self, order_class, text_data_file, sep=','):
+        ''' Detect tables & GET the CODE for a given a text_data_file.
         True or Exception returned.
         '''
-        fields, order2 = self.get_fields(order, data_file, sep)
+        fields, order2 = self.get_fields(order_class, text_data_file, sep)
         if fields is None:
-           raise GenException("Error: SqlDetect.GetFields has None.")
-        sql = SqliteCrud(order, fields)
-        return sql.code_class_template(data_file, sep=sep)
+           raise GenException("Error: No data field(s) detected.")
+        sql = SqliteCrud(order_class, fields)
+        return sql.code_class_template(text_data_file, sep=sep)
 
-    def gen_order(self, order, text_file, sep=','):
-        ''' Detect tables & WRITE the ORDER FILE for a given data_file.
+    def write_project(self, pref, order_class, text_data_file, sep=','):
+        ''' Detect tables & SAVE the PROJECT extracted from a user-selected text_data_file.
         True or Exception returned.
         '''
-        fields, order2 = self.get_fields(order, text_file, sep)
+        fields, order2 = self.get_fields(order_class, text_data_file, sep)
         if fields is None:
-           raise GenException("Error: SqlDetect.GetFields has None.")
-        return OrderDef.SaveFile(order2, overwrite=True)
+           raise GenException("Error: No data field(s) detected.")
+        return Factory1.SaveFile(pref, order2, overwrite=True)
 
-    def write_code(self, order, text_file, sep=','):
-        ''' Write CODE from an OrderClass using data from an arbitrary input / data_file.
+    def write_code(self, pref, order_class, text_data_file, sep=','):
+        ''' Write CODE from an OrderClass using data from a given text_data_file.
         True or Exception returned.
         '''
-        source = self.gen_code(order, text_file, sep=sep)
-        with open(order.file_name, "w") as fh:
+        source = self.gen_code(order_class, text_data_file, sep=sep)
+        file_name = pref['Code Folder'] + os.path.sep + OrderDef.BaseName(order_class.file_name)            
+        with open(file_name, "w") as fh:
             fh.write(source)
             return True
         return False

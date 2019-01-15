@@ -4,7 +4,7 @@
 # 2018/12/19: Project Begun
 
 # Mission: Create a graphical, data-file detection, UI for PyDAO.
-# Status: Code Complete. Alpha.
+# Status: Heavily refactored. Testing success. Alpha.
 
 import os
 import sys
@@ -16,10 +16,10 @@ from tkinter.filedialog import askopenfilename
 from tkinter import simpledialog
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
-from SqltDAO.SchemaDef.Order import OrderDef
+from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.CodeGen01.CodeGen import DaoGen
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
 
 from collections import OrderedDict
 
@@ -29,10 +29,13 @@ class Data2Code(simpledialog.Dialog):
         self.gen_ok = False
         self.gendef = gendef
         self.verbose = verbose
-        self.ztitle = "Text Table Tool, Rev 0.1"
+        if gendef:
+            self.ztitle = "Data2Proj, Rev 0.1"
+        else:
+            self.ztitle = "Data2Code, Rev 0.1"
         self.order_class = None
-        self.file_name = StringVar()
-        self.file_name.set(" ")
+        self.import_file_name = StringVar()
+        self.import_file_name.set(" ")
         self.field_sel = StringVar()
         self.field_seps = (
             (0, 'CSV', '","'),
@@ -44,7 +47,7 @@ class Data2Code(simpledialog.Dialog):
         self.field_sel.set(0)
 
         if not pref:
-            self.pref = DataPrefrences.Load('.')
+            self.pref = DataPreferences.Load('.')
         else:
             self.pref = pref
 
@@ -66,7 +69,7 @@ class Data2Code(simpledialog.Dialog):
             initialdir=self.pref['Csv Folder'])
         if not len(fn):
             return
-        self.file_name.set(fn)
+        self.import_file_name.set(fn)
         self.attributes('-topmost',True)
         fbase = os.path.splitext(fn)[0]
         nodes = os.path.split(fn)
@@ -75,8 +78,8 @@ class Data2Code(simpledialog.Dialog):
         self.order_class = OrderClass(
             class_name=subject,
             table_name=subject,
-            db_name=fbase + ".sqlt3",
-            file_name=fbase + ".py")
+            db_name=fbase + OrderDef.DbType,
+            file_name=fbase + OrderDef.CodeType)
         self.pref['Csv Folder'] = os.path.dirname(fn)
         self.order_class.home(self.pref)
         self._show_order()
@@ -85,20 +88,22 @@ class Data2Code(simpledialog.Dialog):
         return True # TODO: Check for input & output file existance
 
     def _create_project(self, zsel):
-        gen = DaoGen(self.pref)
+        gen = DaoGen()
         if self.can_create(gen):
-            self.gen_ok = gen.gen_order(
+            self.gen_ok = gen.write_project(
+                self.pref,
                 self.order_class,
-                self.file_name.get(), sep=zsel[2])
+                self.import_file_name.get(), sep=zsel[2])
             return self.gen_ok
         return False
 
     def _create_code(self, zsel):
-        gen = DaoGen(self.pref)
+        gen = DaoGen()
         if self.can_create(gen):
             self.gen_ok = gen.write_code(
+                self.pref,
                 self.order_class,
-                self.file_name.get(), sep=zsel[2])
+                self.import_file_name.get(), sep=zsel[2])
             return self.gen_ok
         return False
 
@@ -110,8 +115,9 @@ class Data2Code(simpledialog.Dialog):
             else:
                 self.gen_ok = self._create_code(zsel)
         except Exception as ex:
-            print(ex)
             self.gen_ok = False
+            if self.verbose:
+                print(ex)
         finally:
             if self.verbose:
                 if self.gen_ok:
@@ -132,7 +138,7 @@ class Data2Code(simpledialog.Dialog):
                command=self.on_txt_fn
                ).grid(column=0, row=0)
         Label(zfa, text="File: ").place(relx=0.1, rely=0.2)
-        efn = Entry(zfa, width=50, textvariable=self.file_name)
+        efn = Entry(zfa, width=50, textvariable=self.import_file_name)
         efn.place(relx=0.2, rely=0.2)
 
         # Radio Group
@@ -161,13 +167,24 @@ class Data2Code(simpledialog.Dialog):
 
 
 if __name__ == "__main__":
-    zroot = Tk(useTk=1)
-    zroot.tk_setPalette(background="Light Green")
-    zworks = Data2Code(parent=zroot, pref=None, verbose=True, gendef=True)
-    zroot.destroy()
-    if zworks.gen_ok:
-        print("gen okay")
-    else:
-        print("gen nokay")
+    pref = DataPreferences.Load('.')
+    pref['Csv Folder']  =   "../DaoTest01"
+    pref['Projects']    =   "../../Proj"
+    pref['Sql Folder']  =   "../../Sql"
+    pref['Code Folder'] =   "../../Code"
+
+    for key in pref:
+        if not os.path.exists(pref[key]):
+            os.mkdir(pref[key])
+    
+    for zTest in True, False:
+        zroot = Tk(useTk=1)
+        zroot.tk_setPalette(background="Light Green")
+        zworks = Data2Code(parent=zroot, pref=pref, verbose=True, gendef=zTest)
+        zroot.destroy()
+        if zworks.gen_ok:
+            print("gen okay")
+        else:
+            print("gen nokay")
 
 

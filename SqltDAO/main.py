@@ -17,14 +17,15 @@ from collections import OrderedDict
 
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
-from SqltDAO.SchemaDef.Order import OrderDef
+from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
+from SqltDAO.SchemaDef.Factory import Factory1
 from SqltDAO.CodeGen01.CodeGen import DaoGen
 
 from SqltDAO.Gui.Data2Code import Data2Code
 from SqltDAO.Gui.StandardEntry import LabelEntry
 from SqltDAO.Gui.TableDef import TableDef as TableDef2
 from SqltDAO.SchemaDef.Table import TableDef as TableDef1
-from SqltDAO.Gui.DataPrefrences import Dp1 as DataPrefrences
+from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
 
 class Main(Tk):
 
@@ -46,7 +47,7 @@ class Main(Tk):
             )
         self.table_frame = None
         self.home = "."
-        self.orderDef = OrderDef(DataPrefrences.Load(self.home))
+        self.order_def = OrderDef()
 
         '''
         activeBackground, foreground, selectColor,
@@ -63,7 +64,7 @@ class Main(Tk):
                 )
     
     def _on_open(self):
-        pref = DataPrefrences.Load(self.home)
+        pref = DataPreferences.Load(self.home)
         self.project = askopenfilename(
             title="Open Project File",
             initialdir=pref['Projects'],
@@ -71,7 +72,7 @@ class Main(Tk):
             )
         if not self.project:
             return
-        zdef = OrderDef.LoadFile(self.project, DataPrefrences.Load(self.home))
+        zdef = Factory1.LoadFile(self.project)
         if not zdef:
             messagebox.showerror(
                 "Schema File / Format Error",
@@ -79,7 +80,7 @@ class Main(Tk):
         else:
             self.table_frame.got_results()
             self.title(self.project)
-            self.orderDef = zdef
+            self.order_def = zdef
             self._show_order()
 
     def do_save(self):
@@ -91,18 +92,13 @@ class Main(Tk):
                 "No Data",
                 "Schema Definition Required.")
             return False
-        self.orderDef = OrderDef(DataPrefrences.Load(self.home), name=ztbl.get_table_name())
-        if not self.orderDef.add_table(ztbl):
+        self.order_def = OrderDef(name=ztbl.get_table_name())
+        if not self.order_def.add_table(ztbl):
             messagebox.showerror(
                 "Invalid Table",
                 "Please verify SQL Table Definition.")
             return False
-        if not self.orderDef.home(DataPrefrences.Load(self.home)):
-            messagebox.showerror(
-                "Invalid Locations",
-                "Please verify user locations.")
-            return False
-        if OrderDef.SaveFile(self.orderDef, overwrite=True) is False:
+        if Factory1.SaveFile(DataPreferences.Load(self.home), self.order_def, overwrite=True) is False:
             messagebox.showerror(
                 "Exportation Error",
                 "Please verify user locations.")
@@ -112,37 +108,37 @@ class Main(Tk):
     
     def _on_save(self):
         if self.do_save() is True:
-            val = os.path.split(self.orderDef.project_name)
+            val = os.path.split(self.order_def.project_name)
             messagebox.showinfo(
                 "Project Saved",
                 "Project file saved as " + val[-1] + " in preference location.")
 
     def _on_create(self):
         if self.do_save() is True:
-            pref = DataPrefrences.Load(self.home)
-            order_class = OrderDef.Extract(self.orderDef, pref)
+            pref = DataPreferences.Load(self.home)
+            order_class = Factory1.Extract(self.order_def, pref)
             zfields = OrderedDict()
-            ztables = self.orderDef.table_names()
-            table_def  = self.orderDef.find_table(ztables[0]) # TODO: Highlander hack.
+            ztables = self.order_def.table_names()
+            table_def  = self.order_def.find_table(ztables[0]) # TODO: Highlander hack.
             for row in table_def:
                 zfields[row[1]] = row[2]
             sql = SqliteCrud(order_class, zfields)
-            zcode = sql.code_class_template(self.orderDef.db_name, sep='","')
-            with open(self.orderDef.code_name, 'w') as fh:
+            zcode = sql.code_class_template(self.order_def.database_name, sep='","')
+            with open(self.order_def.code_name, 'w') as fh:
                 print(zcode, file=fh)
-            val = os.path.split(self.orderDef.code_name)
+            val = os.path.split(self.order_def.code_name)
             messagebox.showinfo(
                 "Source Code Success",
                 "Class created as " + val[-1] + " in preference location.")
 
     def _on_d2c(self):
-        Data2Code(self, pref=DataPrefrences.Load(self.home), verbose=True)
+        Data2Code(self, pref=DataPreferences.Load(self.home), verbose=True)
 
     def _on_d2p(self):
-        Data2Code(self, pref=DataPrefrences.Load(self.home), gendef=True, verbose=True)
+        Data2Code(self, pref=DataPreferences.Load(self.home), gendef=True, verbose=True)
 
     def _on_d2pref(self):
-        zpref = DataPrefrences(self, self.home)
+        zpref = DataPreferences(self, self.home)
         if zpref.has_changed():
             pass
 
@@ -152,11 +148,11 @@ class Main(Tk):
             "Mode: Cross-platform Testing")
 
     def _show_order(self):
-        if not self.orderDef:
+        if not self.order_def:
             return False
         self.table_frame.empty()
-        for key in self.orderDef.zdict_tables:
-            td1 = self.orderDef.zdict_tables[key]
+        for key in self.order_def.zdict_tables:
+            td1 = self.order_def.zdict_tables[key]
             if self.table_frame.put_results(td1) is False:
                 messagebox.showerror(
                     "Display Error",
