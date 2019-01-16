@@ -41,9 +41,10 @@ class Factory1:
         return order_def
 
     @staticmethod
-    def Create(order_class, fields):
+    def Create(order_class, fields, encoding=None):
         ''' Create an OrderDef from an OrderClass + Fields. Raise an exception on error. '''
-        order_def = Factory1.Convert(order_class)        
+        order_def = Factory1.Convert(order_class)
+        order_def.encoding = encoding
         ztable = TableDef(name=order_class.table_name)
         for field in fields:
             if ztable.add_field(field[0], field[1]) is False:

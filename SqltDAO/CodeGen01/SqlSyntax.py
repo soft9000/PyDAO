@@ -144,12 +144,16 @@ class SqliteCrud:
 
         self.level.push()
         result += self.level.print("@staticmethod")
-        result += self.level.print("def Import(dao, text_file='" + text_file + "', hasHeader=True, sep='" + sep + "'):")
+        if self.order.encoding:
+            encoding = "'" + self.order.encoding + "'"
+        else:
+            encoding = str(self.order.encoding)
+        result += self.level.print("def Import(dao, encoding=" + encoding + ", text_file='" + text_file + "', hasHeader=True, sep='" + sep + "'):")
         self.level.inc()
         result += self.level.print("try:")
         self.level.inc()
         result += self.level.print('# dao.open()')
-        result += self.level.print("with open(text_file) as fh:")
+        result += self.level.print("with open(text_file, encoding=encoding) as fh:")
         self.level.inc()
         result += self.level.print("line = fh.readline().strip()")
         result += self.level.print("if hasHeader is True:")

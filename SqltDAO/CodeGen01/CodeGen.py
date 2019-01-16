@@ -12,12 +12,12 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.SchemaDef.Factory import Factory1
 from SqltDAO.CodeGen01.DaoExceptions import *
-from SqltDAO.CodeGen01.SqlDetect import SqlDetect
+from SqltDAO.CodeGen01.TextDataDetector import TextDataDetect, TextData
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
-from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
-
 
 class DaoGen:
+
+    ''' The official code generator. Expanded to create GUI Projects from data files, as well. '''
 
     def __init__(self):
         pass
@@ -32,12 +32,14 @@ class DaoGen:
             raise TypeError("Instance of OrderClass is required.")
         if os.path.exists(text_data_file) is False:
             raise IOError("Data file not found.")
-        header = SqlDetect.GetHeader(text_data_file, sep=sep)
+        header = TextDataDetect.GetHeader(text_data_file, sep=sep)
         if header is None:
             raise IOError("Header not found.")
-        fields = SqlDetect.GetFields(text_data_file, sep=sep)
-        order_def = Factory1.Create(order_class, fields)
-        return fields, order_def
+        detect = TextDataDetect.GetFields(text_data_file, sep=sep)
+        if detect is None:
+            raise IOError("Data not found.")
+        order_def = Factory1.Create(order_class, detect.fields, encoding=detect.encoding)
+        return detect.fields, order_def
 
     def gen_code(self, order_class, text_data_file, sep=','):
         ''' Detect tables & GET the CODE for a given a text_data_file.

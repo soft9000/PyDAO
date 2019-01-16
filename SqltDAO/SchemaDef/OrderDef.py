@@ -4,7 +4,9 @@
 # 2018/12/19: File created
 # 2018/01/15: File renamed
 
-# Mission: Manage the factory order
+''' Mission: Manage a factory-order for the GUI, with
+legacy API (OrderClass) conversion. '''
+
 # Status: Mutli-table serialization testing okay
 
 import os
@@ -17,8 +19,18 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
 class OrderDef1:
-    ''' Basic Factory-Order definition, multiple tables.
-    Note: Schema name will be used as the Database file + folder / archive name.
+    ''' The official project-definition. Unlike OrderClass, an OrderDef
+    is designed to be used in conjunction with 'Preferences.' As such,
+    the use of fully-qualified path-names is discouraged. Rather,
+    absolute OUTPUT file locations require user-preferenced to be
+    specified.
+
+    Designed for more comprehensive database support / user selectable
+    support, things like schema names and multiple table definitions
+    (etc.) are what this order-type is all about.
+
+    A user-specified endpoint, note that the INPUT DATA FILE s-h-o-u-l-d never
+    be saved by an order, because it m-u-s-t NEVER be changed. 
     '''
     NONAME          = "_-$junker!__.~"  # Invalid SQL name - for "must init" testing
     ProjType        = ".daop1"          # "Official Format, Version 1" - Always used.
@@ -39,6 +51,8 @@ class OrderDef1:
         self.zdict['code_fname']    = name
         self.zdict['db_fname']      = name
         self.zdict['project_fname'] = name
+        self.zdict['data_encoding'] = None
+        self.zdict['data_sep']      = None
         self.zdict_tables = OrderedDict()
 
     @staticmethod
@@ -50,7 +64,7 @@ class OrderDef1:
 
     def fixup(self):
         ''' Enforce our "no file type" and "no file path" policies.
-        A user-specified endpoint, note that the INPUT DATA FILE must NEVER be changed. '''
+        '''
         self.zdict['project_fname'] = self.remove(self.zdict['project_fname'], OrderDef1.ProjType)
         self.zdict['db_fname']      = self.remove(self.zdict['db_fname'], OrderDef1.DbType)
         self.zdict['code_fname']    = self.remove(self.zdict['code_fname'], OrderDef1.CodeType)
@@ -60,6 +74,8 @@ class OrderDef1:
         Handy when user has specified none, for example, when working in "ProjectMode."
         '''
         result = self.zdict['db_fname']
+        if result is OrderDef1.NONAME:
+            result = OrderDef1.DEFAULT_SCHEMA
         if result.endswith(OrderDef1.DbType):
             return result + OrderDef1.TEXT_DATA_TYPE
         return result
@@ -90,6 +106,22 @@ class OrderDef1:
         if source.endswith(suffix):
             return source[0:-len(suffix)]
         return source
+
+    @property
+    def encoding(self):
+        return self.zdict['data_encoding']
+
+    @encoding.setter
+    def encoding(self, value):
+        self.zdict['data_encoding'] = value
+
+    @property
+    def sep(self):
+        return self.zdict['data_sep']
+
+    @sep.setter
+    def sep(self, value):
+        self.zdict['data_sep'] = value
 
     @property
     def name(self):

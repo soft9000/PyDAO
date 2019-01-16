@@ -10,12 +10,24 @@ from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences, Preferences
 
 class OrderClass:
 
+    ''' The official interface into the API. Used to generate code, without
+    'Preferences.' As such, the fully-qualified _fnames are used to indicate
+    where the code_ and db_ output should reside.
+
+    A user-specified endpoint, the INPUT DATA FILE s-h-o-u-l-d never
+    be saved by an order; it is part of the OUTPUT code, and associated
+    with an order by the code-generation API. 
+
+    '''
+
     def __init__(self, class_name='SqltDAO', table_name='SqltDAO', db_name='./SqltDAO.sqlt3', file_name='./SqltDAO.py'):
         self._zdict = OrderedDict()
-        self._zdict['class_name'] = class_name
-        self._zdict['table_name'] = table_name
-        self._zdict['code_fname'] = file_name
-        self._zdict['db_fname'] = db_name
+        self._zdict['class_name']   = class_name
+        self._zdict['table_name']   = table_name
+        self._zdict['code_fname']   = file_name
+        self._zdict['db_fname']     = db_name
+        self._zdict['data_encoding']= None
+        self._zdict['data_sep']     = None
 
     def home(self, opred):
         ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
@@ -53,6 +65,22 @@ class OrderClass:
         name = str(name).strip()
         name = name.replace(' ', '_')
         return name
+
+    @property
+    def encoding(self):
+        return self._zdict['data_encoding']
+
+    @encoding.setter
+    def encoding(self, value):
+        self._zdict['data_encoding'] = value
+
+    @property
+    def sep(self):
+        return self._zdict['data_sep']
+
+    @sep.setter
+    def sep(self, value):
+        self._zdict['data_sep'] = value
 
     @property
     def db_name(self):

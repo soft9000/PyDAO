@@ -18,19 +18,19 @@ class Inspector:
     @staticmethod
     def _count_lines(fh, line_max=-1):
         ''' internal use only '''
-        result = 0
+        tally = 0
         bokay = False
         if fh:
             try:
                 for line in fh:
-                    result += 1
+                    tally += 1
                     if line_max >= 0:
-                        if result >= line_max:
+                        if tally >= line_max:
                             break
                 bokay = True
             except:
                 pass
-        return result, bokay
+        return tally, bokay
 
 
     @staticmethod
@@ -38,7 +38,7 @@ class Inspector:
         '''
         Check to see how many lines (#) are in a data-file.
         The 2nd result is the file encoding. None = Classic / ASCII encoding.
-        The 3rd result indicates if the file was read completely ('toeof.')
+        The 3rd result is boolean. Indicates if the file was read completely ('toeof.')
 
         Use line_max to prevent huge line-scans. 
         
@@ -53,16 +53,25 @@ class Inspector:
         bokay = False
         for ztype in Inspector.ENCODINGS:
             try:
-                fh = InspectorCSV._open(fqfile, ztype)
+                fh = open(fqfile, 'r', encoding=ztype)
                 count = Inspector._count_lines(fh, line_max)
                 if count[0] > zmax:
                     zmax  = count[0]
                     bokay = count[1]
                     rtype = ztype
             except:
-                pass
+                try:
+                    close(fh)
+                except:
+                    pass
+            finally:
+                try:
+                    close(fh)
+                except:
+                    pass
             
-        return zmax, rtype, bokay
+        results = zmax, rtype, bokay
+        return results
 
 
 
@@ -91,14 +100,7 @@ class InspectorCSV:
             "quoting":pie.quoting,
             "lineterminator":pie.lineterminator
         }
-    
-    @staticmethod
-    def _open(fqfile, ztype=None):
-        ''' internal use only '''
-        if ztype:
-            return open(fqfile, 'r', encoding=ztype)
-        else:
-            return open(fqfile, 'r')
+
 
     @staticmethod
     def Detect(fqfile, max_lines=20):
@@ -120,7 +122,7 @@ class InspectorCSV:
         for ztype in Inspector.ENCODINGS:
             try:
                 result = 0
-                fh = InspectorCSV._open(fqfile, ztype)
+                fh = open(fqfile, 'r', encoding=ztype)
                 result = Inspector._count_lines(fh, line_max=max_lines)                
                 if result[0] > max_read:
                     max_read = result[0]
@@ -155,7 +157,7 @@ class InspectorCSV:
             try:
                 pop = dict()
                 result = 0
-                fh = InspectorCSV._open(fqfile, ztype)
+                fh = open(fqfile, 'r', encoding=ztype)
                 zcount = Inspector._count_lines(fh, line_max=max_lines)
                 try:
                     fh.close()
@@ -172,7 +174,7 @@ class InspectorCSV:
                     total = zcount[0]
                     
                 sn = csv.Sniffer()
-                fh = InspectorCSV._open(fqfile, ztype)
+                fh = open(fqfile, 'r', encoding=ztype)
                 for ss, line in enumerate(fh):
                     if ss > total:
                         break
@@ -218,7 +220,7 @@ class InspectorCSV:
             pig = fqfile + sep[1]
             if os.path.exists(pig):
                 os.unlink(pig)
-            fh = InspectorCSV._open(fqfile, tr[1])
+            fh = open(fqfile, 'r', encoding=ztype)
             if tr[1]:
                 pig = fqfile + '.' + tr[1] + sep[1]
                 fout = open(pig, 'w', encoding=tr[1])
@@ -234,6 +236,12 @@ class InspectorCSV:
             raise Exception("Partial file read: {}/{}".format(ss,tr[0]))
         except Exception as ex:
             raise(ex)
+        finally:
+            try:
+                close(fh)
+                close(fout)
+            except:
+                pass
         
         raise Exception("File format error.")
 
