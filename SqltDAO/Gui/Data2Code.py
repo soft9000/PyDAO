@@ -36,13 +36,7 @@ class Data2Code(simpledialog.Dialog):
         self.order_class = None
         self.import_file_name = StringVar()
         self.import_file_name.set(" ")
-        self.field_sel = StringVar()
-        self.field_seps = (
-            (0, 'CSV', '","'),
-            (1, 'TAB', '\t'),
-            (2, 'PIPE', '|'),
-            (3, 'COMMA', ',')
-            )
+        self.field_seps = OrderDef.DELIMITERS
         self.field_sel = IntVar()
         self.field_sel.set(0)
 
@@ -89,21 +83,23 @@ class Data2Code(simpledialog.Dialog):
 
     def _create_project(self, zsel):
         gen = DaoGen()
+        self.order_class.sep = zsel
         if self.can_create(gen):
             self.gen_ok = gen.write_project(
                 self.pref,
                 self.order_class,
-                self.import_file_name.get(), sep=zsel[2])
+                self.import_file_name.get())
             return self.gen_ok
         return False
 
     def _create_code(self, zsel):
         gen = DaoGen()
+        self.order_class.sep = zsel
         if self.can_create(gen):
             self.gen_ok = gen.write_code(
                 self.pref,
                 self.order_class,
-                self.import_file_name.get(), sep=zsel[2])
+                self.import_file_name.get())
             return self.gen_ok
         return False
 
@@ -154,6 +150,10 @@ class Data2Code(simpledialog.Dialog):
         # Order Metadata
         zfb = LabelFrame(zframe, text=" Detection ")
         for ss, key in enumerate(self.display_info):
+            if key == 'data_encoding':
+                continue
+            if key == 'data_sep':
+                continue
             Label(zfb, text=key + ": ").grid(column=0, row=ss)
             Entry(zfb, width=50, state='readonly',
                   textvariable=self.display_info[key]).grid(column=1, row=ss)

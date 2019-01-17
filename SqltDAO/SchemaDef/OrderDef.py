@@ -40,6 +40,12 @@ class OrderDef1:
     DEFAULT_SCHEMA  = "Default"
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     SEPS            = [os.path.sep, "/", "\\"]  # Zero tolerance for path names here.
+    DELIMITERS = (
+        (0, 'PIPE',  '|'), # Code-Base Default (positional)
+        (1, 'COMMA', ','),
+        (2, 'TAB',   '\t'),
+        (3, 'CSV',  '","'),
+        )
 
     def __init__(self, name=None):
         if not name:
@@ -52,7 +58,7 @@ class OrderDef1:
         self.zdict['db_fname']      = name
         self.zdict['project_fname'] = name
         self.zdict['data_encoding'] = None
-        self.zdict['data_sep']      = None
+        self.zdict['data_sep']      = OrderDef1.DELIMITERS[0]
         self.zdict_tables = OrderedDict()
 
     @staticmethod

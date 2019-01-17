@@ -124,8 +124,7 @@ class Main(Tk):
                 zfields[row[1]] = row[2]
             sql = SqliteCrud(order_class, zfields)
             zcode = sql.code_class_template(
-                self.order_def.database_name + OrderDef.TEXT_DATA_TYPE,
-                sep='","')
+                self.order_def.database_name + OrderDef.TEXT_DATA_TYPE)
             with open(self.order_def.code_name, 'w') as fh:
                 print(zcode, file=fh)
             val = os.path.split(self.order_def.code_name)

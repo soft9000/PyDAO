@@ -22,7 +22,7 @@ class DaoGen:
     def __init__(self):
         pass
     
-    def get_fields(self, order_class, text_data_file, sep=','):
+    def get_fields(self, order_class, text_data_file):
         '''
         Populate an OrderDef using an OrderClass + text_data_file.
         Returns OrderDef + Fields detected upon success,
@@ -32,39 +32,39 @@ class DaoGen:
             raise TypeError("Instance of OrderClass is required.")
         if os.path.exists(text_data_file) is False:
             raise IOError("Data file not found.")
-        header = TextDataDetect.GetHeader(text_data_file, sep=sep)
+        header = TextDataDetect.GetHeader(text_data_file)
         if header is None:
             raise IOError("Header not found.")
-        detect = TextDataDetect.GetFields(text_data_file, sep=sep)
+        detect = TextDataDetect.GetFields(text_data_file)
         if detect is None:
-            raise IOError("Data not found.")
+            raise IOError("Data not detected.")
         order_def = Factory1.Create(order_class, detect.fields, encoding=detect.encoding)
         return detect.fields, order_def
 
-    def gen_code(self, order_class, text_data_file, sep=','):
+    def gen_code(self, order_class, text_data_file):
         ''' Detect tables & GET the CODE for a given a text_data_file.
         True or Exception returned.
         '''
-        fields, order2 = self.get_fields(order_class, text_data_file, sep)
+        fields, order2 = self.get_fields(order_class, text_data_file)
         if fields is None:
            raise GenException("Error: No data field(s) detected.")
         sql = SqliteCrud(order_class, fields)
-        return sql.code_class_template(text_data_file, sep=sep)
+        return sql.code_class_template(text_data_file)
 
-    def write_project(self, pref, order_class, text_data_file, sep=','):
+    def write_project(self, pref, order_class, text_data_file):
         ''' Detect tables & SAVE the PROJECT extracted from a user-selected text_data_file.
         True or Exception returned.
         '''
-        fields, order2 = self.get_fields(order_class, text_data_file, sep)
+        fields, order2 = self.get_fields(order_class, text_data_file)
         if fields is None:
            raise GenException("Error: No data field(s) detected.")
         return Factory1.SaveFile(pref, order2, overwrite=True)
 
-    def write_code(self, pref, order_class, text_data_file, sep=','):
+    def write_code(self, pref, order_class, text_data_file):
         ''' Write CODE from an OrderClass using data from a given text_data_file.
         True or Exception returned.
         '''
-        source = self.gen_code(order_class, text_data_file, sep=sep)
+        source = self.gen_code(order_class, text_data_file)
         file_name = pref['Code Folder'] + os.path.sep + OrderDef.BaseName(order_class.file_name)            
         with open(file_name, "w") as fh:
             fh.write(source)

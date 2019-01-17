@@ -23,7 +23,7 @@ class SqliteCrud:
         self.fields = fields
         self.level = CodeLevel()
 
-    def code_class_template(self, text_file, sep=','):
+    def code_class_template(self, text_file):
         ''' Translate a local order into Python code. Returns created source-code. '''
         import time
         from SqltDAO.CodeGen01.Meta import Meta
@@ -148,8 +148,65 @@ class SqliteCrud:
             encoding = "'" + self.order.encoding + "'"
         else:
             encoding = str(self.order.encoding)
-        result += self.level.print("def Import(dao, encoding=" + encoding + ", text_file='" + text_file + "', hasHeader=True, sep='" + sep + "'):")
+        result += self.level.print("def Import(dao, encoding=" + encoding
+                                   + ", text_file='" + text_file
+                                   + "', hasHeader=True, sep='" + self.order.sep[2] + "'):")
         self.level.inc()
+
+        if self.order.sep[1] == 'CSV':
+            result += self._inject_import_csv()
+        else:
+            result += self._inject_import()
+
+        result += self.level.print("")
+        self.level.dec()
+        self.level.pop()
+
+        result += self.level.print("")
+        return result
+
+    def sql_create_table(self):
+        ''' Translate the order into a field-driven SQL Table creation statement. '''
+        result = "CREATE TABLE IF NOT EXISTS " + self.order.table_name
+        result = result + '(ID INTEGER PRIMARY KEY AUTOINCREMENT,'
+        for ss, val in enumerate(self.fields):
+            result += ' '
+            result += val[0] + " "
+            result += val[1] + ","
+        result = result[0:len(result) - 1]
+        result = result + ');'
+        return result
+
+    def sql_insert_row(self):
+        ''' Translate the order into a field-driven SQL Row creation statement. '''
+        result = "INSERT INTO " + self.order.table_name + " ("
+        for val in self.fields:
+            result += ' '
+            result += val[0] + ","
+        result = result[0:len(result) - 1]
+        result = result + ') VALUES ('
+        for val in self.fields:
+            result += '?,'
+        result = result[0:len(result) - 1]
+        result = result + ');'
+        return result
+
+    def _inject_import_csv(self):
+        result = ''
+        result += self.level.print('import csv')
+        result += self.level.print("with open(text_file, 'r', encoding=encoding) as fh:")
+        self.level.inc()
+        result += self.level.print('lines = csv.reader(fh)')
+        result += self.level.print('for line in lines:')
+        self.level.inc()
+        result += self.level.print('dao.insert(line)')
+        self.level.dec()
+        self.level.dec()
+        result += self.level.print('return True')
+        return result
+
+    def _inject_import(self):
+        result = ''
         result += self.level.print("try:")
         self.level.inc()
         result += self.level.print('# dao.open()')
@@ -177,37 +234,8 @@ class SqliteCrud:
         result += self.level.print("pass")
         self.level.dec()
         result += self.level.print("return False")
-        result += self.level.print("")
-        self.level.dec()
-        self.level.pop()
-
-        result += self.level.print("")
         return result
 
 
-    def sql_create_table(self):
-        ''' Translate the order into a field-driven SQL Table creation statement. '''
-        result = "CREATE TABLE IF NOT EXISTS " + self.order.table_name
-        result = result + '(ID INTEGER PRIMARY KEY AUTOINCREMENT,'
-        for ss, val in enumerate(self.fields):
-            result += ' '
-            result += val[0] + " "
-            result += val[1] + ","
-        result = result[0:len(result) - 1]
-        result = result + ');'
-        return result
 
-
-    def sql_insert_row(self):
-        ''' Translate the order into a field-driven SQL Row creation statement. '''
-        result = "INSERT INTO " + self.order.table_name + " ("
-        for val in self.fields:
-            result += ' '
-            result += val[0] + ","
-        result = result[0:len(result) - 1]
-        result = result + ') VALUES ('
-        for val in self.fields:
-            result += '?,'
-        result = result[0:len(result) - 1]
-        result = result + ');'
-        return result
+    

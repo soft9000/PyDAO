@@ -21,13 +21,14 @@ class OrderClass:
     '''
 
     def __init__(self, class_name='SqltDAO', table_name='SqltDAO', db_name='./SqltDAO.sqlt3', file_name='./SqltDAO.py'):
+        from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
         self._zdict = OrderedDict()
         self._zdict['class_name']   = class_name
         self._zdict['table_name']   = table_name
         self._zdict['code_fname']   = file_name
         self._zdict['db_fname']     = db_name
         self._zdict['data_encoding']= None
-        self._zdict['data_sep']     = None
+        self._zdict['data_sep']     = OrderDef.DELIMITERS[0]
 
     def home(self, opred):
         ''' Apply the user dictionary-preferences to this order, preserving the leaf-node.
