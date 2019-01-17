@@ -30,9 +30,9 @@ class Data2Code(simpledialog.Dialog):
         self.gendef = gendef
         self.verbose = verbose
         if gendef:
-            self.ztitle = "Data2Proj, Rev 0.1"
+            self.ztitle = "Data2Proj, Rev 0.2"
         else:
-            self.ztitle = "Data2Code, Rev 0.1"
+            self.ztitle = "Data2Code, Rev 0.2"
         self.order_class = None
         self.import_file_name = StringVar()
         self.import_file_name.set(" ")

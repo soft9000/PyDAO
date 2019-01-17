@@ -36,20 +36,18 @@ class Factory1:
         order_def = OrderDef()
         data = order_class.__dict__()
         for key in data:
-            order_def.zdict[key] = data[key]
+            order_def._zdict[key] = data[key]
         order_def.fixup()
         return order_def
 
     @staticmethod
-    def Create(order_class, fields, encoding=None):
+    def Create(order_class, detect):
         ''' Create an OrderDef from an OrderClass + Fields. Raise an exception on error. '''
+        from SqltDAO.CodeGen01.TextDataDetector import TextData
+        assert(isinstance(detect, TextData))
         order_def = Factory1.Convert(order_class)
-        order_def.encoding = encoding
-        ztable = TableDef(name=order_class.table_name)
-        for field in fields:
-            if ztable.add_field(field[0], field[1]) is False:
-                raise GenOrderError("Error: Invalid Data Definition.")
-        order_def.add_table(ztable)
+        if not order_def.assign(detect, order_class.table_name):
+            raise Exception("Error: Unable to convert detected data type.")
         return order_def
 
     @staticmethod
@@ -58,15 +56,15 @@ class Factory1:
         ''' Extract an OrderClass from an OrderDef. Raise an exception on error.'''
         if isinstance(order_def, OrderDef) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
-        for key in order_def.zdict:
-            if order_def.zdict[key] == OrderDef.NONAME:
+        for key in order_def._zdict:
+            if order_def._zdict[key] == OrderDef.NONAME:
                 raise TypeError("Error: Please define a '" + key + "' value.")
 
         order_def.fixup()
         
         table_name = None
-        for key in order_def.zdict_tables:
-            table_name = order_def.zdict_tables[key].get_table_name()
+        for key in order_def._zdict_tables:
+            table_name = order_def._zdict_tables[key].get_table_name()
             break # HIGHLANDER HACK
         if not table_name:
             raise TypeError("Error: No tables have been defined.")
@@ -102,7 +100,7 @@ class Factory1:
                             pw_def.add_field(row[1], row[2])
                         order_def.add_table(pw_def)
                     else:
-                        order_def.zdict[key] = zdict[key]
+                        order_def._zdict[key] = zdict[key]
                 order_def.fixup()
                 return order_def
         except Exception as ex:
@@ -139,10 +137,10 @@ class Factory1:
             if bExists:
                 os.unlink(fq_file)
             with open(fq_file, 'w') as fh:
-                zformat = OrderedDict(order_def.zdict)
+                zformat = OrderedDict(order_def._zdict)
                 zval = list()
-                for table in order_def.zdict_tables:
-                    for zdef in order_def.zdict_tables[table]:
+                for table in order_def._zdict_tables:
+                    for zdef in order_def._zdict_tables[table]:
                         zval.append(zdef)
                 zformat[OrderDef.IOKEY] = repr(zval)
                 print(str(zformat), file=fh)
@@ -191,6 +189,14 @@ if __name__ == "__main__":
     print(odd)
 
     os.unlink(zorder.project_name)
-    
-    
 
+    # OrderClass Inter-Operation
+    from SqltDAO.CodeGen01.TextDataDetector import TextData
+    detect = TextData()
+    detect.fields = list()
+    detect.fields.append(("MyAccount", "Integer"))
+    detect.fields.append(("MyField", "TEXT"))
+    detect.encoding = "utf-8"
+    detect.sep = 'CSV'
+    order_class = OrderClass()
+    order_def = Factory1.Create(order_class, detect)

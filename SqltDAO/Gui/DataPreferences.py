@@ -24,20 +24,20 @@ class Preferences:
     final resting places. '''
 
     def __init__(self, zdict):
-        self.zdict = zdict
+        self._zdict = zdict
         
     def __iter__(self):
         ''' Classic usage requires that we make it scriptable... '''
-        for key in self.zdict.keys():
+        for key in self._zdict.keys():
             yield key
         
     def __getitem__(self, key):
         ''' Classic usage requires that we make it scriptable... '''
-        return self.zdict[key]
+        return self._zdict[key]
         
     def __setitem__(self, key, value):
         ''' Classic usage requires that we make it scriptable... '''
-        self.zdict[key] = value
+        self._zdict[key] = value
     
 
 class Dp1(simpledialog.Dialog):

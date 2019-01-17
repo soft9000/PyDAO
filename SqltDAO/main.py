@@ -152,8 +152,8 @@ class Main(Tk):
         if not self.order_def:
             return False
         self.table_frame.empty()
-        for key in self.order_def.zdict_tables:
-            td1 = self.order_def.zdict_tables[key]
+        for key in self.order_def._zdict_tables:
+            td1 = self.order_def._zdict_tables[key]
             if self.table_frame.put_results(td1) is False:
                 messagebox.showerror(
                     "Display Error",

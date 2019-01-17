@@ -38,7 +38,7 @@ class DaoGen:
         detect = TextDataDetect.GetFields(text_data_file, order_class.sep[2])
         if detect is None:
             raise IOError("Data not detected.")
-        order_def = Factory1.Create(order_class, detect.fields, encoding=detect.encoding)
+        order_def = Factory1.Create(order_class, detect)
         return detect.fields, order_def
 
     def gen_code(self, order_class, text_data_file):

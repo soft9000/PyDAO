@@ -54,7 +54,6 @@ class TextDataDetect:
         header = TextDataDetect._GetHeader(file)
         return TextDataDetect.Norm(header, sep=sep)
 
-
     @staticmethod
     def IsFloating(value):
         try:

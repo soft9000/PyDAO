@@ -51,15 +51,28 @@ class OrderDef1:
         if not name:
             name = OrderDef1.NONAME
         OrderDef1.PATH_EXCEPT(name)
-        self.zdict = OrderedDict()
-        self.zdict['schema_name']   = OrderDef1.DEFAULT_SCHEMA
-        self.zdict['class_name']    = name
-        self.zdict['code_fname']    = name
-        self.zdict['db_fname']      = name
-        self.zdict['project_fname'] = name
-        self.zdict['data_encoding'] = None
-        self.zdict['data_sep']      = OrderDef1.DELIMITERS[0]
-        self.zdict_tables = OrderedDict()
+        self._zdict = OrderedDict()
+        self._zdict['schema_name']   = OrderDef1.DEFAULT_SCHEMA
+        self._zdict['class_name']    = name
+        self._zdict['code_fname']    = name
+        self._zdict['db_fname']      = name
+        self._zdict['project_fname'] = name
+        self._zdict['data_encoding'] = None
+        self._zdict['data_sep']      = OrderDef1.DELIMITERS[0]
+        self._zdict_tables = OrderedDict()
+
+    def assign(self, detect, table_name):
+        ''' Populate ourselves based upon a detected set of fields. Effects are cumulative.
+        Returns True upon success, else False. '''
+        from SqltDAO.CodeGen01.TextDataDetector import TextData
+        assert(isinstance(detect, TextData))
+        self.sep = detect.sep
+        self.encoding = detect.encoding
+        ztable = TableDef(name=table_name)
+        for field in detect.fields:
+            if ztable.add_field(field[0], field[1]) is False:
+                return False
+        return self.add_table(ztable)
 
     @staticmethod
     def PATH_EXCEPT(name):
@@ -71,15 +84,15 @@ class OrderDef1:
     def fixup(self):
         ''' Enforce our "no file type" and "no file path" policies.
         '''
-        self.zdict['project_fname'] = self.remove(self.zdict['project_fname'], OrderDef1.ProjType)
-        self.zdict['db_fname']      = self.remove(self.zdict['db_fname'], OrderDef1.DbType)
-        self.zdict['code_fname']    = self.remove(self.zdict['code_fname'], OrderDef1.CodeType)
+        self._zdict['project_fname'] = self.remove(self._zdict['project_fname'], OrderDef1.ProjType)
+        self._zdict['db_fname']      = self.remove(self._zdict['db_fname'], OrderDef1.DbType)
+        self._zdict['code_fname']    = self.remove(self._zdict['code_fname'], OrderDef1.CodeType)
 
     def coin_input_file(self):
         ''' Suggest a text-data file-name based upon the database file name & location.
         Handy when user has specified none, for example, when working in "ProjectMode."
         '''
-        result = self.zdict['db_fname']
+        result = self._zdict['db_fname']
         if result is OrderDef1.NONAME:
             result = OrderDef1.DEFAULT_SCHEMA
         if result.endswith(OrderDef1.DbType):
@@ -115,21 +128,21 @@ class OrderDef1:
 
     @property
     def encoding(self):
-        return self.zdict['data_encoding']
+        return self._zdict['data_encoding']
 
     @encoding.setter
     def encoding(self, value):
-        self.zdict['data_encoding'] = value
+        self._zdict['data_encoding'] = value
 
     @property
     def sep(self):
-        return self.zdict['data_sep']
+        return self._zdict['data_sep']
 
     @sep.setter
     def sep(self, value):
         ''' Delimiter can be specified by number, name, pattern, or unique.
         Unique patterns must follow those of DataDef.DELIMITERS.'''
-        for line in OrderDef.DELIMITERS:
+        for line in OrderDef1.DELIMITERS:
             for row in line:
                 if value == row:
                     self._zdict['data_sep'] = line
@@ -139,22 +152,22 @@ class OrderDef1:
 
     @property
     def name(self):
-        return self.zdict['class_name']
+        return self._zdict['class_name']
 
     @property
     def project_name(self):
         ''' Concoct a file-name from the schema name.'''
-        return self.zdict['project_fname'] + OrderDef1.ProjType
+        return self._zdict['project_fname'] + OrderDef1.ProjType
 
     @property
     def code_name(self):
         ''' Concoct a file-name from the schema name.'''
-        return self.zdict['code_fname'] + OrderDef1.CodeType
+        return self._zdict['code_fname'] + OrderDef1.CodeType
 
     @property
     def database_name(self):
         ''' Concoct the database file name.'''
-        result = self.zdict['db_fname']
+        result = self._zdict['db_fname']
         if result.endswith(OrderDef1.DbType):
             return result
         return result + OrderDef1.DbType
@@ -162,51 +175,51 @@ class OrderDef1:
     @property
     def schema_name(self):
         ''' Query the schema name. '''
-        return self.zdict['schema_name']
+        return self._zdict['schema_name']
 
     @schema_name.setter
     def schema_name(self, name):
         ''' Change the schema name. True if all is well, else False. '''
         if not name:
             return False
-        self.zdict['schema_name'] = TableDef.Normalize(name)
+        self._zdict['schema_name'] = TableDef.Normalize(name)
         return True
 
     @property
     def class_name(self):
         ''' Query the class name. '''
-        return self.zdict['class_name']
+        return self._zdict['class_name']
 
     def add_table(self, table_def):
         ''' Add a table. False if not added, or already added. '''
         if not isinstance(table_def, TableDef):
             return False
-        if table_def._name in self.zdict_tables:
+        if table_def._name in self._zdict_tables:
             return False
-        self.zdict_tables[table_def._name] = table_def
+        self._zdict_tables[table_def._name] = table_def
         return True
 
     def table_names(self):
         ''' Return all of the table-names. Can be empty.'''
-        return tuple(self.zdict_tables.keys())
+        return tuple(self._zdict_tables.keys())
 
     def find_table(self, name):
         ''' Lookup a table definition, by name. None if not found. '''
-        if name in self.zdict_tables:
-            return self.zdict_tables[name]
+        if name in self._zdict_tables:
+            return self._zdict_tables[name]
         return None
 
     def remove_table(self, name):
         ''' Remove a table. Always returns True. '''
-        if name in self.zdict_tables:
-            self.zdict_tables.pop(name)
+        if name in self._zdict_tables:
+            self._zdict_tables.pop(name)
         return True
 
     def change_table(self, name, table_def):
         ''' Change the definition for an existing TableDef. '''
-        if name not in self.zdict_tables:
+        if name not in self._zdict_tables:
             return False
-        self.zdict_tables[name] = table_def
+        self._zdict_tables[name] = table_def
         return True
 
     def __str__(self):
@@ -226,9 +239,9 @@ class OrderDef1:
             yield key, values[key]
 
     def __dict__(self):
-        results = OrderedDict(self.zdict)
-        for key in self.zdict_tables:
-            results[key] = self.zdict_tables[key]
+        results = OrderedDict(self._zdict)
+        for key in self._zdict_tables:
+            results[key] = self._zdict_tables[key]
         return results
 
 
