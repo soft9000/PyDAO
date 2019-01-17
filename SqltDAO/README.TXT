@@ -23,11 +23,11 @@ GUI Quick Start
 (6) Use Soft9000/PyDAO
     Video: https://youtu.be/azCokv4iI8k
     
-Known Limitations
-=================
-Support is in the works for:
+New Features
+============
+Support added this week:
     o Unicode
-    o Asymmetrical CSV
+    o Asymmetrical / Classic CSV
 See ./SchemaDef/DataDetective.py for the finalized R&D results.
 
 API Example:
