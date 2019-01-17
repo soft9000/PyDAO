@@ -88,6 +88,6 @@ for line in tables:
     zfields = line["Fields"]
     sql = SqliteCrud(order, zfields)
     data_file = str(zname + '.csv')
-    result = sql.code_class_template(data_file, sep='","')
+    result = sql.code_class_template(data_file)
     with open(output_file + ".py", 'a') as fh:
         print(result, file=fh)

@@ -127,7 +127,15 @@ class OrderDef1:
 
     @sep.setter
     def sep(self, value):
-        self.zdict['data_sep'] = value
+        ''' Delimiter can be specified by number, name, pattern, or unique.
+        Unique patterns must follow those of DataDef.DELIMITERS.'''
+        for line in OrderDef.DELIMITERS:
+            for row in line:
+                if value == row:
+                    self._zdict['data_sep'] = line
+                    return
+        if len(value) is 3:
+            self._zdict['data_sep'] = value
 
     @property
     def name(self):

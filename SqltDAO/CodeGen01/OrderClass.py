@@ -81,7 +81,16 @@ class OrderClass:
 
     @sep.setter
     def sep(self, value):
-        self._zdict['data_sep'] = value
+        from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
+        ''' Delimiter can be specified by number, name, pattern, or unique.
+        Unique patterns must follow those of DataDef.DELIMITERS.'''
+        for line in OrderDef.DELIMITERS:
+            for row in line:
+                if value == row:
+                    self._zdict['data_sep'] = line
+                    return
+        if len(value) is 3:
+            self._zdict['data_sep'] = value
 
     @property
     def db_name(self):

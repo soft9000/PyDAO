@@ -32,10 +32,10 @@ class DaoGen:
             raise TypeError("Instance of OrderClass is required.")
         if os.path.exists(text_data_file) is False:
             raise IOError("Data file not found.")
-        header = TextDataDetect.GetHeader(text_data_file)
+        header = TextDataDetect.GetHeader(text_data_file, order_class.sep[2])
         if header is None:
             raise IOError("Header not found.")
-        detect = TextDataDetect.GetFields(text_data_file)
+        detect = TextDataDetect.GetFields(text_data_file, order_class.sep[2])
         if detect is None:
             raise IOError("Data not detected.")
         order_def = Factory1.Create(order_class, detect.fields, encoding=detect.encoding)
