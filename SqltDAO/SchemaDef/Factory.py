@@ -16,9 +16,25 @@ from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
+from SqltDAO.CodeGen01.TextDataDetector import TextDataDetect, TextData 
+
 class Factory1:
 
-    ''' First OrderDef Factory '''
+    ''' First OrderDef Factory (OrderDef1) '''
+    
+    @staticmethod
+    def Detect(fqfn, has_header=True):
+        ''' Detect + return an OrderDef for a fully-qualified file-name (fqfn.)
+        Attempt is exhaustive. Return None on error, or proper OrderDef on success.
+        Safe function: No exceptions are thrown.'''
+        for ztype in OrderDef.DELIMITERS:
+            try:
+                text_info = TextDataDetect.GetFields(fqfn, sep=ztype[2], hasHeader=has_header)
+                assert(isinstance(text_info, TextData))
+                return text_info
+            except Exception as ex:
+                pass
+        return None
 
     @staticmethod
     def Fixup(order_def):
@@ -104,7 +120,7 @@ class Factory1:
                 order_def.fixup()
                 return order_def
         except Exception as ex:
-            print(ex)
+            print(ex.__traceback__)
             return False        
 
     @staticmethod
@@ -153,50 +169,72 @@ class Factory1:
 
 if __name__ == "__main__":
     ''' A few basic test cases ... '''
-    from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
-    pref = DataPreferences.Load('.')
-    zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
-    zname = zorder.project_name
-    print("zname", zname)
-    if os.path.exists(zname):
-        print("unlinking", zname)
-        os.unlink(zname)
-    for ss in range(4):
-        table = "zTable " + str(ss)
-        ztable = TableDef(name=table)
-        for ztype in TableDef.SupportedTypes:
-            ztable.add_field(table + ' ' + ztype, ztype)
-        zorder.add_table(ztable)
+    if True:
+##        import csv
+##        with open("../DaoTest01/tc001_data.txt") as fh:
+##            with open("../DaoTest01/tc002_data.txt", 'w') as fh2:
+##                lines = csv.reader(fh)
+##                for line in lines:
+##                    newline = ''
+##                    for col in line:
+##                        col = col.replace('"', '').strip()
+##                        newline += col + '\t'
+##                    print(newline.strip(), file=fh2)
+        files = (
+            ("../DaoTest01/Income.csv", "COMMA"),
+            ("../DaoTest01/nasdaqlisted.txt", "PIPE"),
+            ("../DaoTest01/tc001_data.txt", "CSV"),
+            ("../DaoTest01/tc002_data.txt", "TAB"),
+            )
+        for file, result in files:
+            print(file, result)
+            detect = Factory1.Detect(file)
+            print(detect.__dict__)
+    else:
+        from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
+        pref = DataPreferences.Load('.')
+        zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
+        zname = zorder.project_name
+        print("zname", zname)
+        if os.path.exists(zname):
+            print("unlinking", zname)
+            os.unlink(zname)
+        for ss in range(4):
+            table = "zTable " + str(ss)
+            ztable = TableDef(name=table)
+            for ztype in TableDef.SupportedTypes:
+                ztable.add_field(table + ' ' + ztype, ztype)
+            zorder.add_table(ztable)
 
-    print("zorder:\n", zorder, '\n')
-    zname = zorder.project_name
-    # print("zname", zname)
-    if os.path.exists(zname):
-        print("unlinking", zname)
-        os.unlink(zname)
-    
-    assert(Factory1.SaveFile(pref, zorder))
-    
-    zorder2 = Factory1.LoadFile(zname)
-    # print("zorder2:\n", zorder2, '\n')
-    assert(zorder2 is not False)
-    assert(str(zorder) == str(zorder2))
+        print("zorder:\n", zorder, '\n')
+        zname = zorder.project_name
+        # print("zname", zname)
+        if os.path.exists(zname):
+            print("unlinking", zname)
+            os.unlink(zname)
+        
+        assert(Factory1.SaveFile(pref, zorder))
+        
+        zorder2 = Factory1.LoadFile(zname)
+        # print("zorder2:\n", zorder2, '\n')
+        assert(zorder2 is not False)
+        assert(str(zorder) == str(zorder2))
 
-    for ss, table in enumerate(zorder2, 1):
-        print(ss, table)
+        for ss, table in enumerate(zorder2, 1):
+            print(ss, table)
 
-    odd = Factory1.Extract(zorder2, pref)
-    print(odd)
+        odd = Factory1.Extract(zorder2, pref)
+        print(odd)
 
-    os.unlink(zorder.project_name)
+        os.unlink(zorder.project_name)
 
-    # OrderClass Inter-Operation
-    from SqltDAO.CodeGen01.TextDataDetector import TextData
-    detect = TextData()
-    detect.fields = list()
-    detect.fields.append(("MyAccount", "Integer"))
-    detect.fields.append(("MyField", "TEXT"))
-    detect.encoding = "utf-8"
-    detect.sep = 'CSV'
-    order_class = OrderClass()
-    order_def = Factory1.Create(order_class, detect)
+        # OrderClass Inter-Operation
+        from SqltDAO.CodeGen01.TextDataDetector import TextData
+        detect = TextData()
+        detect.fields = list()
+        detect.fields.append(("MyAccount", "Integer"))
+        detect.fields.append(("MyField", "TEXT"))
+        detect.encoding = "utf-8"
+        detect.sep = 'CSV'
+        order_class = OrderClass()
+        order_def = Factory1.Create(order_class, detect)

@@ -41,10 +41,10 @@ class OrderDef1:
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     SEPS            = [os.path.sep, "/", "\\"]  # Zero tolerance for path names here.
     DELIMITERS = (
-        (0, 'PIPE',  '|'), # Code-Base Default (positional)
-        (1, 'COMMA', ','),
-        (2, 'TAB',   '\t'),
-        (3, 'CSV',  '","'),
+        (0, 'PIPE',  '|'), # Code-Base Default (positional.) We prefer PIPE or TAB!
+        (1, 'TAB',   '\t'),
+        (2, 'CSV',  '","'),# Classic support enabled.
+        (3, 'COMMA', ','), # Catch-All: Try CSV before COMMA. (Might even be depricated, now?)
         )
 
     def __init__(self, name=None):

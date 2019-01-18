@@ -1,0 +1,6 @@
+First Name	Last Name	Age	Phone Number	Balance	Email Address
+Randall	Nagy	123	(727) 844-3210	123.456	r.a.nagy@gmail.com
+Randall	Smith	456	(813) 844-3210	54.	foo@gmail.com
+Patrita	Koons	01	(654) 888-3210	.11	koons@gmail.com
+Smackey	Etonic	123	(727) 844-3210	8.67	Etonic@gmail.com
+Portebello	Fungi	4	(666) 844-3210	0	MrMouldy@gmail.com

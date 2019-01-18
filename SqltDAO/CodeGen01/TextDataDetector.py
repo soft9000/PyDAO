@@ -118,7 +118,51 @@ class TextDataDetect:
         fh = open(file, 'r', encoding=zStat[1])
         return fh, zStat[1]
         
+        
 
+    @staticmethod
+    def GetFieldsCSV(file, text_data, count=50):
+        '''
+        Success: A properly-ordered list() of (field-name, SQLite Type) values
+        Failure: Check for 'None' or Exception
+        '''
+        import csv
+        header = None
+        zTup = InspectorCSV.Detect(file) # do, or die
+        with open(file, encoding=zTup[1]) as fh:
+            lines = csv.reader(fh)
+            saved = None
+            for ss, line in enumerate(lines, 1):
+                text_data.lines_scanned = ss
+                if not line:
+                    break
+                if ss >= count:
+                    break
+                if text_data.header:
+                    if not header:
+                        header = TextDataDetect.FixHeaderNames(line)
+                        continue
+                pw = []
+                for col in line:
+                    ztype = TextDataDetect.GetType(col)
+                    pw.append(ztype)            
+                if saved is None:
+                    saved = pw
+                    continue
+                for ss, ref in enumerate(pw):
+                    if ref is None:
+                        pw[ss] = "Text" # UNIQUE OVERRIDE
+                if pw != saved:
+                    for ss, col in enumerate(pw):
+                        if saved[ss] != col:
+                            if saved[ss] == 'REAL' and col == 'INTEGER':
+                                pw[ss] = saved[ss] # Keep it REAL
+                                continue
+                            pw[ss] = "TEXT" # UNIQUE OVERRIDE
+                    saved = pw # Demoted!
+            text_data.fields = list(zip(header, saved))
+            return text_data
+                
     @staticmethod
     def GetFields(file, sep=',', hasHeader=True, count=50):
         '''
@@ -129,6 +173,9 @@ class TextDataDetect:
         text_data.sep = sep
         text_data.header = hasHeader
         try:
+            if sep == '","':
+                zCheck = TextDataDetect.GetFieldsCSV(file, text_data, count=count)
+                return zCheck
             header = None
             zStat = TextDataDetect.Open(file)
             fh = zStat[0]

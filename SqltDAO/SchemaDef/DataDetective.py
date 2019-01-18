@@ -122,7 +122,7 @@ class InspectorCSV:
         for ztype in Inspector.ENCODINGS:
             try:
                 result = 0
-                fh = open(fqfile, 'r', encoding=ztype)
+                fh = open(fqfile, encoding=ztype)
                 result = Inspector._count_lines(fh, line_max=max_lines)                
                 if result[0] > max_read:
                     max_read = result[0]
@@ -135,7 +135,8 @@ class InspectorCSV:
                     except:
                         pass
                 continue # Next encoding!
-        return max_read, encoding, bokay
+        results = max_read, encoding, bokay
+        return results
 
     @staticmethod
     def Sniff(fqfile, max_lines=20):
