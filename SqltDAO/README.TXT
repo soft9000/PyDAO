@@ -30,6 +30,12 @@ Support added this week:
     o Asymmetrical / Classic CSV
 See ./SchemaDef/DataDetective.py for the finalized R&D results.
 
+Latest Features (Work-in Process)
+===============
+DataAI: Automatically detect row / data file encoding 
+Deep Scan: Allow for >20 rows to be scanned (entire file is best for Unicode!)
+Header Mode: Allow for automatic-field naming.
+
 API Example:
 ===========
 ./Demo123.py
