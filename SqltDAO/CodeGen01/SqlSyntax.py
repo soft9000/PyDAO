@@ -171,6 +171,8 @@ class SqliteCrud:
         result = "CREATE TABLE IF NOT EXISTS " + self.order.table_name
         result = result + '(ID INTEGER PRIMARY KEY AUTOINCREMENT,'
         for key in self.fields:
+            if key.lower() == "id":
+                continue
             result += ' '
             result += key + " "
             result += self.fields[key] + ","
@@ -181,12 +183,18 @@ class SqliteCrud:
     def sql_insert_row(self):
         ''' Translate the order into a field-driven SQL Row creation statement. '''
         result = "INSERT INTO " + self.order.table_name + " ("
+        dum = 1
+        final_keys = list()
         for key in self.fields:
+            if key.lower() == "id":
+                dum += 1
+                continue
             result += ' '
             result += key + ","
+            final_keys.append(key)
         result = result[0:len(result) - 1]
         result = result + ') VALUES ('
-        for val in self.fields:
+        for val in final_keys:
             result += '?,'
         result = result[0:len(result) - 1]
         result = result + ');'
