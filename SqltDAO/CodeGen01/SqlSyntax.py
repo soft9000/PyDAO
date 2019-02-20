@@ -18,7 +18,7 @@ class SqliteCrud:
         Will raise an exception when proper types are not provided.
         '''
         assert(isinstance(order, OrderClass))
-        assert(fields)
+        assert(isinstance(fields, dict))
         self.order = order
         self.fields = fields
         self.level = CodeLevel()
@@ -170,10 +170,10 @@ class SqliteCrud:
         ''' Translate the order into a field-driven SQL Table creation statement. '''
         result = "CREATE TABLE IF NOT EXISTS " + self.order.table_name
         result = result + '(ID INTEGER PRIMARY KEY AUTOINCREMENT,'
-        for ss, val in enumerate(self.fields):
+        for key in self.fields:
             result += ' '
-            result += val[0] + " "
-            result += val[1] + ","
+            result += key + " "
+            result += self.fields[key] + ","
         result = result[0:len(result) - 1]
         result = result + ');'
         return result
@@ -181,9 +181,9 @@ class SqliteCrud:
     def sql_insert_row(self):
         ''' Translate the order into a field-driven SQL Row creation statement. '''
         result = "INSERT INTO " + self.order.table_name + " ("
-        for val in self.fields:
+        for key in self.fields:
             result += ' '
-            result += val[0] + ","
+            result += key + ","
         result = result[0:len(result) - 1]
         result = result + ') VALUES ('
         for val in self.fields:
