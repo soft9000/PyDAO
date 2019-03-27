@@ -31,7 +31,10 @@ class TextDataDetect:
     @staticmethod
     def _GetHeader(file):
         with open(file, encoding='utf-8') as fh:
-            return fh.readline().strip()
+            line = fh.readline().strip()
+            if ord(line[0]) == 65279:
+                return line[1:] # skip the BOM
+            return line
 
     @staticmethod
     def FixHeaderNames(headers, spacer=''):
