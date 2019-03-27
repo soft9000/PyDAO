@@ -5,6 +5,7 @@ import os
 import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
+from collections import OrderedDict
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.CodeLevel import CodeLevel
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
@@ -18,7 +19,11 @@ class SqliteCrud:
         Will raise an exception when proper types are not provided.
         '''
         assert(isinstance(order, OrderClass))
-        assert(isinstance(fields, dict))
+        if isinstance(fields, list):
+            zdict = OrderedDict()
+            for field in fields:
+                zdict[field[0]] = field[1]
+            fields = zdict
         self.order = order
         self.fields = fields
         self.level = CodeLevel()
