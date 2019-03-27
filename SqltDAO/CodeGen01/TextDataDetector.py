@@ -30,7 +30,7 @@ class TextDataDetect:
 
     @staticmethod
     def _GetHeader(file):
-        with open(file) as fh:
+        with open(file, encoding='utf-8') as fh:
             return fh.readline().strip()
 
     @staticmethod
