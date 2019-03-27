@@ -66,7 +66,7 @@ class DaoGen:
         '''
         source = self.gen_code(order_class, text_data_file)
         file_name = pref['Code Folder'] + os.path.sep + OrderDef.BaseName(order_class.file_name)            
-        with open(file_name, "w") as fh:
+        with open(file_name, "w", encoding='utf-8') as fh:
             fh.write(source)
             return True
         return False
