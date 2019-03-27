@@ -29,11 +29,11 @@ class TextDataDetect:
     '''
 
     @staticmethod
-    def _GetHeader(file):
-        with open(file, encoding='utf-8') as fh:
+    def _GetHeader(file, encoding='utf-8'):
+        with open(file, encoding=encoding) as fh:
             line = fh.readline().strip()
             if ord(line[0]) == 65279:
-                return line[1:] # skip the BOM
+                return line[1:] # skip the UTF-16 BOM
             return line
 
     @staticmethod
@@ -45,6 +45,8 @@ class TextDataDetect:
 
     @staticmethod
     def Norm(line, sep=','):
+        if ord(line[0]) == 65279:
+            line = line[1:] # skip the UTF-16 BOM
         cols = line.split(sep)
         results = []
         for col in cols:
