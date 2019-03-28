@@ -7,6 +7,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from collections import OrderedDict
 from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences, Preferences
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 class OrderClass:
 
@@ -59,14 +60,6 @@ class OrderClass:
         results = self.__dict__()
         return str(results)
 
-    @staticmethod
-    def Norm(name):
-        if name is None:
-            return ''
-        name = str(name).strip()
-        name = name.replace(' ', '_')
-        return name
-
     @property
     def encoding(self):
         return self._zdict['data_encoding']
@@ -114,7 +107,7 @@ class OrderClass:
     def table_name(self, name):
         if name is not None:
             try:
-                self._zdict['table_name'] = OrderClass.Norm(name)
+                self._zdict['table_name'] = Norm.NormCol(name)
                 return True
             except:
                 pass
@@ -128,7 +121,7 @@ class OrderClass:
     def class_name(self, name):
         if name is not None:
             try:
-                self._zdict['class_name'] = OrderClass.Norm(name)
+                self._zdict['class_name'] = Norm.NormCol(name)
                 return True
             except:
                 pass

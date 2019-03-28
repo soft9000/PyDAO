@@ -17,6 +17,7 @@ from collections import OrderedDict
 from SqltDAO.SchemaDef.Table import TableDef
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 class OrderDef1:
     ''' The official project-definition. Unlike OrderClass, an OrderDef
@@ -182,7 +183,7 @@ class OrderDef1:
         ''' Change the schema name. True if all is well, else False. '''
         if not name:
             return False
-        self._zdict['schema_name'] = TableDef.Normalize(name)
+        self._zdict['schema_name'] = Norm.NormCol(name)
         return True
 
     @property

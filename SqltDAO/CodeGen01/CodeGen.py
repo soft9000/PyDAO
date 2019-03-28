@@ -8,12 +8,14 @@ import os
 import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
+from collections import OrderedDict
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.SchemaDef.Factory import Factory1
 from SqltDAO.CodeGen01.DaoExceptions import *
 from SqltDAO.CodeGen01.TextDataDetector import TextDataDetect, TextData
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 class DaoGen:
 
@@ -39,7 +41,7 @@ class DaoGen:
         if detect is None:
             raise IOError("Data not detected.")
         order_def = Factory1.Create(order_class, detect)
-        return detect.fields, order_def
+        return Norm.NormCols(detect.fields), order_def
 
     def gen_code(self, order_class, text_data_file):
         ''' Detect tables & GET the CODE for a given a text_data_file.

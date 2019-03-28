@@ -6,7 +6,12 @@
 # Mission: Manage the table-definition order
 # Status: Code Complete. Alpha.
 
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+
 from collections import OrderedDict
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 class TableDef():
     ''' Basic table definitions. '''
@@ -15,7 +20,7 @@ class TableDef():
     def __init__(self, name='Default'):
         if not name:
             name = 'Default'
-        self._name = TableDef.Normalize(name)
+        self._name = Norm.NormCol(name)
         self.fields = OrderedDict()
         self.add_field("ID", "integer")
 
@@ -27,7 +32,7 @@ class TableDef():
         ''' Change the table name. '''
         if not name:
             name = 'Default'
-        self._name = TableDef.Normalize(name)
+        self._name = Norm.NormCol(name)
 
     def add_field(self, name, ztype):
         ''' Add a field to the table. False if not added, or already added. '''
@@ -35,7 +40,7 @@ class TableDef():
             return False
         if name in self.fields:
             return name.upper() == "ID" # Rule - for now.
-        name = TableDef.Normalize(name)
+        name = Norm.NormCol(name)
         self.fields[name] = ztype
         return True
 
@@ -81,13 +86,6 @@ class TableDef():
         result = str(type(self)) + ' : '
         result = result + str(self)
         return result
-
-    @staticmethod
-    def Normalize(name):
-        ''' Create an SQL-friendly field name. '''
-        name = name.strip()
-        name = name.replace(' ', '_')
-        return name
 
 
 if __name__ == "__main__":

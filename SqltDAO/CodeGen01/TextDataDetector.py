@@ -8,6 +8,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 from SqltDAO.SchemaDef.DataDetective import Inspector, InspectorCSV
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 class TextData:
 
@@ -44,20 +45,9 @@ class TextDataDetect:
         return headers
 
     @staticmethod
-    def Norm(line, sep=','):
-        if ord(line[0]) == 65279:
-            line = line[1:] # skip the UTF-16 BOM
-        cols = line.split(sep)
-        results = []
-        for col in cols:
-            col = col.replace('"', ' ').strip()
-            results.append(col)
-        return results
-
-    @staticmethod
     def GetHeader(file, sep=','):
         header = TextDataDetect._GetHeader(file)
-        return TextDataDetect.Norm(header, sep=sep)
+        return Norm.NormLine(header, sep=sep)
 
     @staticmethod
     def IsFloating(value):
@@ -100,7 +90,7 @@ class TextDataDetect:
 
     @staticmethod
     def GetTypes(line, sep=','):
-        cols = TextDataDetect.Norm(line, sep)
+        cols = Norm.NormLine(line, sep)
         results = []
         for col in cols:
             ztype = TextDataDetect.GetType(col)
@@ -192,7 +182,7 @@ class TextDataDetect:
                 if not sep in line:
                     raise GenOrderError("Field separator not in row.") 
                 if hasHeader is True:
-                    header = TextDataDetect.Norm(line, sep=sep)
+                    header = Norm.NormLine(line, sep=sep)
                     line = fh.readline()
                 saved = None
                 while line and count > 0:

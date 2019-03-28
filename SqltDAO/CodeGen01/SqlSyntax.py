@@ -9,6 +9,7 @@ from collections import OrderedDict
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.CodeLevel import CodeLevel
 from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
+from SqltDAO.CodeGen01.Normalizers import Norm
 
 
 class SqliteCrud:
@@ -19,13 +20,8 @@ class SqliteCrud:
         Will raise an exception when proper types are not provided.
         '''
         assert(isinstance(order, OrderClass))
-        if isinstance(fields, list):
-            zdict = OrderedDict()
-            for field in fields:
-                zdict[field[0]] = field[1]
-            fields = zdict
         self.order = order
-        self.fields = fields
+        self.fields = Norm.NormCols(fields)
         self.level = CodeLevel()
 
     def code_class_template(self, text_file):
@@ -46,7 +42,7 @@ class SqliteCrud:
         result += self.level.print("def __init__(self):")
 
         self.level.inc()
-        result += self.level.print("self.db = '" + self.order.db_name +"'")
+        result += self.level.print("self.db = '" + Norm.NormPath(self.order.db_name) +"'")
         result += self.level.print("self.conn = None")
         result += self.level.print("self.curs = None")
         result += self.level.print("self.bOpen = False")
@@ -247,6 +243,8 @@ class SqliteCrud:
         self.level.dec()
         result += self.level.print("return False")
         return result
+
+            
 
 
 
