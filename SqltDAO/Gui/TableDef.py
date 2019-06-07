@@ -29,7 +29,7 @@ class TableDef():
         self.field_types = TableDef1.SupportedTypes
         self.field_type.set(self.field_types[0])
         self.field_name.set("my_field")
-        self.table_name.set("Default")
+        self.table_name.set(TableDef1.DEFAULT_NAME)
         self.zlb = None
         self.results = None
         self._body(frame)

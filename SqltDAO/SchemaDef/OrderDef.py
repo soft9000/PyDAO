@@ -38,7 +38,7 @@ class OrderDef1:
     DbType          = ".sqlt3"
     CodeType        = ".py"
     TEXT_DATA_TYPE  = ".txt"
-    DEFAULT_SCHEMA  = "Default"
+    DEFAULT_SCHEMA  = "MySchema"
     IOKEY           = ".~OrdrDf Ky$."   # Space elimination marks unique key.
     SEPS            = [os.path.sep, "/", "\\"]  # Zero tolerance for path names here.
     DELIMITERS = (

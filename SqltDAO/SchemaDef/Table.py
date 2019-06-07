@@ -15,11 +15,13 @@ from SqltDAO.CodeGen01.Normalizers import Norm
 
 class TableDef():
     ''' Basic table definitions. '''
+    DEFAULT_NAME = "MyTable"
+    
     SupportedTypes = ("text", "integer", "real") # KEEP default type, first.
 
-    def __init__(self, name='Default'):
+    def __init__(self, name=DEFAULT_NAME):
         if not name:
-            name = 'Default'
+            name = TableDef.DEFAULT_NAME
         self._name = Norm.NormCol(name)
         self.fields = OrderedDict()
         self.add_field("ID", "integer")
@@ -31,7 +33,7 @@ class TableDef():
     def set_table_name(self, name):
         ''' Change the table name. '''
         if not name:
-            name = 'Default'
+            name = TableDef.DEFAULT_NAME
         self._name = Norm.NormCol(name)
 
     def add_field(self, name, ztype):
@@ -93,7 +95,7 @@ if __name__ == "__main__":
     for key in TableDef.SupportedTypes:
         if ztable.add_field("z Customer " + key, key) is False:
             raise Exception("Error 001: " + str(type(ztable)))
-    assert(ztable.get_table_name() == "Default")
+    assert(ztable.get_table_name() == TableDef.DEFAULT_NAME)
     ztable.set_table_name("   nergal zoom tik \t ")
     assert(ztable.get_table_name() == "nergal_zoom_tik")
     for line in ztable:

@@ -118,6 +118,17 @@ class SqliteCrud:
         result += self.level.print("")
         self.level.dec()
 
+        result += self.level.print("def update(self, id_, fields):")
+        self.level.inc()
+        result += self.level.print("if self.bOpen:")
+        self.level.inc();
+        result += self.level.print('self.curs.execute("' + self.sql_update_row('id_', "fields"))
+        result += self.level.print("return True")
+        self.level.dec()
+        result += self.level.print("return False")
+        result += self.level.print("")
+        self.level.dec()
+
         result += self.level.print("def delete(self, primary_key):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
@@ -197,6 +208,18 @@ class SqliteCrud:
             result += '?,'
         result = result[0:len(result) - 1] # remove closing comma
         result = result + ');'
+        return result
+
+    def sql_update_row(self, key_name, fields_name):
+        ''' Translate the order into a field-driven SQL Row Update statement. '''
+        result = "UPDATE " + self.order.table_name + " SET"
+        for key in self.fields:
+            if key.lower() == "id":
+                continue
+            result += ' '
+            result += key + "=?,"
+        result = result[0:len(result) - 1] # remove closing comma
+        result = result + ' WHERE ID = {}".format(' + key_name + "), " + fields_name + ");"
         return result
 
     def _inject_import_csv(self):

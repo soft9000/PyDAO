@@ -27,7 +27,7 @@ class TableDef():
         self.field_types = ("text", "integer", "float")
         self.field_type.set(self.field_types[0])
         self.field_name.set("my_field")
-        self.table_name.set("Default")
+        self.table_name.set("MyTable")
         self.zlb = None
         self.results = None
         self.body(frame)
