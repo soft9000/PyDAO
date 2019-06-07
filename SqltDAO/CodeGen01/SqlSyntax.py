@@ -219,7 +219,7 @@ class SqliteCrud:
             result += ' '
             result += key + "=?,"
         result = result[0:len(result) - 1] # remove closing comma
-        result = result + ' WHERE ID = {}".format(' + key_name + "), " + fields_name + ");"
+        result = result + ' WHERE ID = {};".format(' + key_name + "), " + fields_name + ")"
         return result
 
     def _inject_import_csv(self):
