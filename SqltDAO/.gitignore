@@ -1,7 +1,4 @@
 *
-*.daop1
-.suo
-*.sqlite
 
 !*.py
 !.gitignore
