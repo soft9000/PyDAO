@@ -35,7 +35,8 @@ class Main(Tk):
         self.d2c = None
         self.project = None
         self.zoptions = (
-            ("Projects",    [("Open Project...", self._on_open),
+            ("Projects",    [("New Project...", self._on_new),
+                             ("Open Project...", self._on_open),
                              ("Save Project...", self._on_save),
                              ("Create Code", self._on_code_create)],),
             ("Tools",       [("Data2Code...", self._on_d2c),
@@ -61,6 +62,14 @@ class Main(Tk):
                 selectBackground="gold", # e.g. Editbox selections
                 activeBackground="gold", # e.g. Menu selections
                 )
+
+    def _on_new(self):
+        self.title(self.ztitle)
+        self.order_def = OrderDef()
+        self.table_frame.empty()
+        self.table_frame.got_results()
+        self.table_frame.table_name.set(TableDef1.DEFAULT_NAME)
+        self._show_order()
     
     def _on_open(self):
         pref = DataPreferences.Load(self.home)
