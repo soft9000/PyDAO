@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/MyTable.py
+/MyTable.daop1
+/Income.py
+/DataPref.dp1
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/PyDAO/v16/.suo
+/.vs/ProjectSettings.json
