@@ -8,11 +8,16 @@ from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
 
 test = DaoGen()
 
-data_file = "./tc001_data.txt"
 order = OrderClass()
 order.class_name = "TC001"
 order.file_name = "./foo.py"
 order.sep = 'CSV'
 print("Order Delimiter:", order.sep)
 
-print(test.write_code(DataPreferences.Load('.'), order, data_file))
+try:
+    data_file = "./tc001_data.txt"
+    print(test.write_code(DataPreferences.Load('.'), order, data_file))
+except:
+    data_file = "./DaoTest01/tc001_data.txt"
+    order.file_name = "./DaoTest01/foo.py"
+    print(test.write_code(DataPreferences.Load('.'), order, data_file))
