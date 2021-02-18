@@ -1,5 +1,6 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
+# 2021/02/18: Adding DAO / Dict I/O usages.
 
 import os
 import sys
@@ -51,11 +52,23 @@ class SqliteCrud:
         result += self.level.print("")
         self.level.dec()
 
+        result += self.level.print("@classmethod")
+        result += self.level.print("def get_fields(cls, value):")
+        self.level.inc()
+        result += self.level.print("if isinstance(value, cls):")
+        self.level.inc()
+        result += self.level.print("return list(value.fields.values())[1:]")
+        self.level.dec()
+        result += self.level.print("return value")
+        result += self.level.print("")
+        self.level.dec()
+
         result += self.level.print("def open(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen is False:")
         self.level.inc();
         result += self.level.print("self.conn = sqlite3.connect(self.db)")
+        result += self.level.print("self.conn.row_factory = sqlite3.Row")
         result += self.level.print("self.curs = self.conn.cursor()")
         result += self.level.print("self.bOpen = True")
         self.level.dec()
@@ -109,6 +122,7 @@ class SqliteCrud:
 
         result += self.level.print("def insert(self, fields):")
         self.level.inc()
+        result += self.level.print("fields = " + self.order.class_name + ".get_fields(fields)")
         result += self.level.print("if self.bOpen:")
         self.level.inc();
         result += self.level.print('self.curs.execute("' + self.sql_insert_row() + '", fields)')
@@ -120,6 +134,7 @@ class SqliteCrud:
 
         result += self.level.print("def update(self, id_, fields):")
         self.level.inc()
+        result += self.level.print("fields = " + self.order.class_name + ".get_fields(fields)")
         result += self.level.print("if self.bOpen:")
         self.level.inc();
         result += self.level.print('self.curs.execute("' + self.sql_update_row('id_', "fields"))
@@ -148,7 +163,7 @@ class SqliteCrud:
         result += self.level.print("zlist = self.curs.fetchall()")
         result += self.level.print("for ref in zlist:")
         self.level.inc();
-        result += self.level.print("yield ref")
+        result += self.level.print("yield OrderedDict(ref)")
         self.level.dec()
         self.level.dec()
         result += self.level.print("return None")
@@ -266,9 +281,5 @@ class SqliteCrud:
         self.level.dec()
         result += self.level.print("return False")
         return result
-
-            
-
-
-
+    
     
