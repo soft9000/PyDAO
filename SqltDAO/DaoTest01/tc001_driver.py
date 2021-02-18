@@ -1,8 +1,14 @@
-from SqltDAO.DaoTest01.foo import TC001
+import os
+import sys
+sys.path.insert(1, os.path.join(sys.path[0], './'))
+sys.path.insert(1, os.path.join(sys.path[0], '../'))
+
+from foo import TC001
 
 test = TC001()
 
 test.open()
+test.drop_table()
 test.create_table()
 test.insert(("First", "Last", "Age", "123-456-7890", 22.56, "farst@foo.net"))
 test.insert(("First2", "Last2", "Age2", "123-456-7890", 22.56, "farst2@foo.net"))
