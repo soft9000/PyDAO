@@ -41,6 +41,7 @@ class TextDataDetect:
     def FixHeaderNames(headers, spacer=''):
         for ss, col in enumerate(headers):
             col = col.replace(' ', spacer)
+            col = col.replace('"', spacer)
             headers[ss] = col
         return headers
 
