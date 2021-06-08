@@ -163,12 +163,19 @@ class SqliteCrud:
         result += self.level.print("zlist = self.curs.fetchall()")
         result += self.level.print("for ref in zlist:")
         self.level.inc();
-        result += self.level.print("yield OrderedDict(ref)")
+        result += self.level.print("try:")
+        self.level.inc();
+        result += self.level.print("yield ref")
+        self.level.dec()
+        result += self.level.print("except:")
+        self.level.inc();
+        result += self.level.print("pass")
         self.level.dec()
         self.level.dec()
         result += self.level.print("return None")
         result += self.level.print("")
         self.level.dec()
+
 
         self.level.push()
         result += self.level.print("@staticmethod")
