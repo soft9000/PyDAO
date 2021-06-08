@@ -176,7 +176,6 @@ class SqliteCrud:
         result += self.level.print("")
         self.level.dec()
 
-
         self.level.push()
         result += self.level.print("@staticmethod")
         if self.order.encoding:
