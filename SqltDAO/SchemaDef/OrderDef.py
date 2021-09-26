@@ -79,7 +79,7 @@ class OrderDef1:
     def PATH_EXCEPT(name):
         ''' Raise an exception if a platform pathname is found. '''
         for sep in OrderDef1.SEPS:
-            if name.find(sep) is not -1:
+            if name.find(sep) != -1:
                 raise TypeError("Error: Path name inclusion is not supported.")
 
     def fixup(self):
@@ -105,7 +105,7 @@ class OrderDef1:
         ''' Remove any path characters. '''
         for sep in OrderDef1.SEPS:
             ipos = source.find(sep)
-            if ipos is not -1:
+            if ipos != -1:
                 source = source.split(sep)[-1]
         return source
 
@@ -117,8 +117,8 @@ class OrderDef1:
         '''
         source = OrderDef1.BaseName(source)
                 
-        if source.find(OrderDef1.NONAME) is not -1:
-            if self.name.find(OrderDef1.NONAME) is not -1:
+        if source.find(OrderDef1.NONAME) != -1:
+            if self.name.find(OrderDef1.NONAME) != -1:
                 return OrderDef1.DEFAULT
             else:
                 return self.name
@@ -148,7 +148,7 @@ class OrderDef1:
                 if value == row:
                     self._zdict['data_sep'] = line
                     return
-        if len(value) is 3:
+        if len(value) == 3:
             self._zdict['data_sep'] = value
 
     @property
