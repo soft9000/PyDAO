@@ -269,7 +269,7 @@ class SqliteCrud:
         self.level.inc()
         result += self.level.print("line = fh.readline().strip()")
         self.level.dec()
-        result += self.level.print("while len(line) is not 0:")
+        result += self.level.print("while len(line) != 0:")
         self.level.inc()
         result += self.level.print("if dao.insert(line.split(sep)) is False:")
         self.level.inc()
