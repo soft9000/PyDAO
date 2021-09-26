@@ -76,7 +76,7 @@ class Employee:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -166,7 +166,7 @@ class Principal:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -256,7 +256,7 @@ class Event:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -346,7 +346,7 @@ class ToDo:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -436,7 +436,7 @@ class Entry:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -445,6 +445,4 @@ class Entry:
         except:
             pass
         return False
-        
     
-
