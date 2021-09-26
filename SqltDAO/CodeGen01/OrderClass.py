@@ -91,7 +91,7 @@ class OrderClass:
 
     @db_name.setter
     def db_name(self, name):
-        if name is not None:
+        if name:
             try:
                 self._zdict['db_fname'] = name
                 return True
@@ -105,7 +105,7 @@ class OrderClass:
 
     @table_name.setter
     def table_name(self, name):
-        if name is not None:
+        if name:
             try:
                 self._zdict['table_name'] = Norm.NormCol(name)
                 return True
@@ -119,7 +119,7 @@ class OrderClass:
 
     @class_name.setter
     def class_name(self, name):
-        if name is not None:
+        if name:
             try:
                 self._zdict['class_name'] = Norm.NormCol(name)
                 return True
@@ -127,14 +127,13 @@ class OrderClass:
                 pass
         return False
 
-
     @property
     def file_name(self):
         return self._zdict['code_fname']
 
     @file_name.setter
     def file_name(self, name):
-        if name is not None:
+        if name:
             try:
                 self._zdict['code_fname'] = name
                 return True
