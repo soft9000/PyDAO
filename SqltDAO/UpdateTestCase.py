@@ -85,7 +85,7 @@ class MyTable:
                 line = fh.readline().strip()
                 if hasHeader is True:
                     line = fh.readline().strip()
-                while len(line) is not 0:
+                while len(line):
                     if dao.insert(line.split(sep)) is False:
                         return False
                     line = fh.readline().strip()
@@ -115,5 +115,4 @@ for row in dao.select("SELECT * FROM MyTable ORDER BY ID;"):
     print(row)
 dao.drop_table()
 dao.close()
-
 
