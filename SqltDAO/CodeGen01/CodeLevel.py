@@ -14,7 +14,7 @@ class CodeLevel:
 
     def pop(self):
         sz = len(self.stack)
-        if sz is not 0:
+        if sz != 0:
             self.level = self.stack[sz - 1]
             self.stack = self.stack[0:sz-1]
 
