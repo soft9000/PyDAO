@@ -82,7 +82,7 @@ class OrderClass:
                 if value == row:
                     self._zdict['data_sep'] = line
                     return
-        if len(value) is 3:
+        if len(value) == 3:
             self._zdict['data_sep'] = value
 
     @property
