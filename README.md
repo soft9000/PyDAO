@@ -14,7 +14,7 @@ MAIN.py (Release Testing)
 
 2018/12/31: The GUI is working well enough to declare what we have as an Alpha. All four (4) workflows are supported - feel free to give it a try!
 
-If you want to support the effort, then purchase one of our training opportunuties, below.
+If you want to support the effort, then purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
 
@@ -62,4 +62,4 @@ As well as our "Python 3000 SQL Quick Start:" https://www.udemy.com/python-3000-
 
 CONTACT INFORMATION
 ---
-If you have suggestions or opportunities - be they for additional projects, corrections, consulting and / or just about anything else - feel free to use the contact form at Soft9000.com to send us a message: http://soft9000.com/blog9000/contact.php
+If you have suggestions or opportunities - be they for additional projects, corrections, consulting and / or just about anything else - feel free to [drop me a message on Facebook](https://www.facebook.com/randall.nagy/)
