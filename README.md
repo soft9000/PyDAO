@@ -1,7 +1,15 @@
 # PyDAO
 The Soft9000/PyDAO ("PyDAO") project allows us to quickly create a Python Class from either a GUI, API, textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
-Workflows include (1) creating stand-alone PyDAO projects, (2) extracting PyDAO projects from textual (CSV, etc.) data files, (3) creating database code from PyDAO projects, and (4) directly creating code from the PYDAO API. Result output-locations can also be specified.
+Workflows include 
+
+(1) creating stand-alone PyDAO projects, 
+
+(2) extracting PyDAO projects from textual (CSV, etc.) data files, 
+
+(3) creating database code from PyDAO projects, and 
+
+(4) directly creating code from the PYDAO API. Result output-locations can also be specified.
 
 The generated code can be used to create / drop database schema (DDL,) as well as to import & work with (C.R.U.D & query) your designed / detected / updated projects.
 
@@ -23,7 +31,7 @@ API Example
 ------------
 For those who would rather create the DAO directly, without using a data file:
 
-Fast-Schema Example: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/Demo123.py
+Fast-Schema Example - https://github.com/soft9000/PyDAO/blob/master/SqltDAO/Demo123.py
 
 
 DATA EXAMPLE + TEST CASE
