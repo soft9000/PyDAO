@@ -1,6 +1,8 @@
 # PyDAO
 The Soft9000/PyDAO ("PyDAO") project allows us to quickly create a Python Class from either a GUI, API, textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
+![PyDAO Project Logo](https://github.com/soft9000/PyDAO/blob/master/PyDAO_GitLogo.png]
+
 _Workflows include_: 
 
 (1) creating stand-alone PyDAO projects, 
