@@ -20,6 +20,8 @@ Project Video: https://youtu.be/azCokv4iI8k
 
 MAIN.py (Release Testing)
 -------
+![PyDAO GUI](https://github.com/soft9000/PyDAO/blob/master/PyDAO_GUI.png)
+
 2021/02/18: Have been using row factories for awhile now. Decided to share. We also can now .insert + .update our DAO's 'object.fields' data, as well.
 
 2018/12/31: The GUI is working well enough to declare what we have as an Alpha. All four (4) workflows are supported - feel free to give it a try!
