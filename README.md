@@ -77,6 +77,7 @@ As well as our "Python 3000 SQL Quick Start:" https://www.udemy.com/python-3000-
 PyQuest Activity
 ----------------
 Need some practice? Then try to ...
+
 ![KP3008](https://github.com/Python3-Training/PyQuest/blob/main/CardGame/QuestProjects/KP3008-C-R-U-D-Accounting.png)
 
 
