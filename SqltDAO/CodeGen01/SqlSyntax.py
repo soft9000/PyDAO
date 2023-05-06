@@ -57,7 +57,7 @@ class SqliteCrud:
         self.level.inc()
         result += self.level.print("if isinstance(value, cls):")
         self.level.inc()
-        result += self.level.print("return list(value.fields.values())[1:]")
+        result += self.level.print("return list(value.fields.values)[1:]")
         self.level.dec()
         result += self.level.print("return value")
         result += self.level.print("")
