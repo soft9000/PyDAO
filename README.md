@@ -22,13 +22,16 @@ Project Video: https://youtu.be/azCokv4iI8k
 All four (4) workflows are supported - feel free to give each a try!
 
 
-MAIN.py
+The GUI
 -------
 ![PyDAO GUI](PyDAO_GUI.png)
 
-2021/02/18: Have been using row factories for awhile now. Decided to share. We also can now .insert + .update our DAO's 'object.fields' data, as well.
+Years latter the project is working well enough to declare what we have as an [Official PyPy Package](https://pypi.org/project/PyDAO-9000/).
 
-2023/05/37: Years latter the project is working well enough to declare what we have as an [Official PyPy Package](https://pypi.org/project/PyDAO-9000/).
+Once installed most will probably want to use the GUI:
+
+>>> from SqltDAO import main as PyDAO
+>>> PyDAO.Main.mainloop()
 
 If you want to support the effort, fell free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
