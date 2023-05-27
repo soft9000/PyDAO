@@ -24,7 +24,7 @@ All four (4) workflows are supported - feel free to give each a try!
 
 MAIN.py
 -------
-![PyDAO GUI](https://github.com/soft9000/PyDAO/blob/master/PyDAO_GUI.png)
+![PyDAO GUI](PyDAO_GUI.png)
 
 2021/02/18: Have been using row factories for awhile now. Decided to share. We also can now .insert + .update our DAO's 'object.fields' data, as well.
 
