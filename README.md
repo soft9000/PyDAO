@@ -26,7 +26,7 @@ The GUI
 -------
 ![PyDAO GUI](PyDAO_GUI.png)
 
-Years latter the project is working well enough to declare what we have as an [Official PyPy Package](https://pypi.org/project/PyDAO-9000/).
+Years latter the project is working well enough to declare what we have as an [Official PyPi Package](https://pypi.org/project/PyDAO-9000/).
 
 Once installed most will probably want to use the GUI:
 
