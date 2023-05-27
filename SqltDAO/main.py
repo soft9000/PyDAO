@@ -192,23 +192,31 @@ class Main(Tk):
         return True
 
     def run(self):
-        self.mainloop()
+        super().mainloop()
         return True
 
     def end(self):
         return True
+    
+    @staticmethod
+    def mainloop():
+        main = Main()
+        try:
+            if main.begin():
+                main.run()
+                return True
+        except Exception as ex:
+            print(str(ex))
+            return False
+        finally:
+            try:
+                main.end()
+            except:
+                pass
+
 
 
 if __name__ == "__main__":
-    main = Main()
-    try:
-        if main.begin():
-            main.run()
-    except Exception as ex:
-        print(str(ex))
-    finally:
-        try:
-            main.end()
-        except:
-            pass
+    Main.mainloop()
+
 
