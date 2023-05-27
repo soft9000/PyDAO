@@ -30,8 +30,8 @@ Years latter the project is working well enough to declare what we have as an [O
 
 Once installed most will probably want to use the GUI:
 
->>> from SqltDAO import main as PyDAO
->>> PyDAO.Main.mainloop()
+> > > from SqltDAO import main as PyDAO
+> > > PyDAO.Main.mainloop()
 
 If you want to support the effort, fell free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
