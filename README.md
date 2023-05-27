@@ -19,23 +19,25 @@ The generated code can be used to create / drop database schema (DDL,) as well a
 
 Project Video: https://youtu.be/azCokv4iI8k
 
+All four (4) workflows are supported - feel free to give each a try!
 
-MAIN.py (Release Testing)
+
+MAIN.py
 -------
 ![PyDAO GUI](https://github.com/soft9000/PyDAO/blob/master/PyDAO_GUI.png)
 
 2021/02/18: Have been using row factories for awhile now. Decided to share. We also can now .insert + .update our DAO's 'object.fields' data, as well.
 
-2018/12/31: The GUI is working well enough to declare what we have as an Alpha. All four (4) workflows are supported - feel free to give it a try!
+2023/05/37: Yeas latter the GUI is working well enough to declare what we have as Release.
 
-If you want to support the effort, then purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
+If you want to support the effort, fell free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
 
 
 API Example
 ------------
-For those who would rather create the DAO directly, without using a data file:
+For those who would rather create the DAO directly without needing a file full of data:
 
 Fast-Schema Example - https://github.com/soft9000/PyDAO/blob/master/SqltDAO/Demo123.py
 
@@ -52,9 +54,7 @@ Generated Code: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/
 STOCK MARKET
 ------------
 Python 1000, Python 2000, and Python 3000 students who are participating in our Stock Market resume-builder will want 
-to look at the NASDAQ database generator.
-
-Selecting Data: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py
+to look at the [NASDAQ database generator](https://github.com/soft9000/PyDAO/blob/master/SqltDAO/DaoTest01/GenNasdaqTest.py).
 
 While that stock exchange's official pipe-delimited ("enpiped" ;) data file is incuded for demonstrative
 purposes, note that the most recent set of enpiped data tokens can be downloaded from the stock exchange.
