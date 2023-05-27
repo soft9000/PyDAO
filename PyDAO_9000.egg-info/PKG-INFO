@@ -1,3 +1,17 @@
+Metadata-Version: 2.1
+Name: PyDAO-9000
+Version: 1.1
+Summary: All-In-One File SQL Code Generator
+Author-email: Randall Nagy <r.a.nagy@gmail.com>
+Project-URL: Homepage, https://github.com/soft9000/PyDAO
+Project-URL: Bug Tracker, https://github.com/soft9000/PyDAO/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 # PyDAO 9000
 The Soft9000/PyDAO ("__PyDAO 9000__") Project allows us to quickly create a Python Class from either a GUI, API, textual (CSV, TDF, Enpiped, etc.) data file, or using a Python Dictionary. 
 
@@ -35,7 +49,7 @@ Once installed most will probably want to use the GUI:
 >>> PyDAO.Main.mainloop()
 ```
 
-If you want to support the effort feel free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
+If you want to support the effort, fell free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
 PyDAO UI: https://github.com/soft9000/PyDAO/blob/master/SqltDAO/main.py
 

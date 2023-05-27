@@ -1,6 +1,6 @@
 [project]
 name = "PyDAO_9000"
-version = "0.9"
+version = "1.02"
 authors = [
   { name="Randall Nagy", email="r.a.nagy@gmail.com" },
 ]

@@ -155,7 +155,7 @@ class Main(Tk):
     def _on_about(self):
         messagebox.showinfo(
             self.ztitle,
-            "Mode: Cross-platform Testing")
+            "Official Release")
 
     def _show_order(self):
         if not self.order_def:
