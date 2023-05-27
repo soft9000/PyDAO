@@ -28,7 +28,7 @@ MAIN.py
 
 2021/02/18: Have been using row factories for awhile now. Decided to share. We also can now .insert + .update our DAO's 'object.fields' data, as well.
 
-2023/05/37: Yeas latter the GUI is working well enough to declare what we have as Release.
+2023/05/37: Years latter the project is working well enough to declare what we have as an [Official PyPy Package](https://pypi.org/project/PyDAO-9000/).
 
 If you want to support the effort, fell free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
 
