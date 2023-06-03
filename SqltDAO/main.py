@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #
 # Author: Soft9000.com
-# 2018/11/24: Project Begun
+# 2018/11/24: GUI Project Begun
 
 # Mission: Create a graphical user interface to PyDAO.
-# Status: WORK IN PROGRESS
+# Status: Released to PyPi
 
 import os
 import sys

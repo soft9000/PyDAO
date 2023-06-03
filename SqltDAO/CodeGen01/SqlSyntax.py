@@ -181,6 +181,7 @@ class SqliteCrud:
         result += self.level.print("return None")
         result += self.level.print("")
         self.level.dec()
+        self.level.dec()
 
         self.level.push()
         result += self.level.print("@staticmethod")
