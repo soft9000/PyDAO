@@ -1,10 +1,10 @@
 [project]
 name = "PyDAO_9000"
-version = "1.02"
+version = "1.2.2"
 authors = [
   { name="Randall Nagy", email="r.a.nagy@gmail.com" },
 ]
-description = "All-In-One File SQL Code Generator"
+description = "'All-In-One File' SQL Code Generator"
 readme = "README.md"
 requires-python = ">=3.6"
 classifiers = [
