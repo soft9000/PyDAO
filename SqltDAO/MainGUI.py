@@ -6,7 +6,7 @@ Enjoy!
    -- Randall
 '''
 
-if __name__ == '__main__'
+if __name__ == '__main__':
    from SqltDAO.CodeGen01.Meta import Meta
    from SqltDAO.main import Main as App
    print(f'Starting "{Meta.Title()}" ...')
