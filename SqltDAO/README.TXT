@@ -21,6 +21,10 @@ Quick Start
 >>> from SqltDAO import main as PyDAO
 >>> PyDAO.Main.mainloop()
 
+or simply:
+
+>>> import SqltDAO
+
 (4) Finally, enjoy the video!
     YouTube: https://youtu.be/azCokv4iI8k
 
