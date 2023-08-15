@@ -38,7 +38,7 @@ Once installed most will probably want to use the GUI:
 As of this release, the GUI will also now start when importing SqltDAO:
 
 ```
->>> import SqltDAO
+>>> import SqltDAO.MainGUI
 ```
 
 If you want to support the effort feel free to purchase one of [our books on amazon](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN) or [training opportunuties](https://www.udemy.com/user/randallnagy2/).
