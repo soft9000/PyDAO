@@ -110,7 +110,7 @@ class Dp1(simpledialog.Dialog):
     def apply(self):
         self.bChanged = True
         order = self.__dict__()    
-        ofile = self.home_dir + '/' + Dp1.FILE_NAME
+        ofile = os.path.normpath(self.home_dir + os.sep + Dp1.FILE_NAME)
         with open(ofile, 'w') as fh:
             fh.write(str(order))
 
@@ -130,7 +130,7 @@ class Dp1(simpledialog.Dialog):
     def Load(home_dir):
         ''' Returns a dictionary if preferences are found. Defaults to home location if none. '''
         home_dir = Dp1.MkHome(home_dir)
-        ofile = home_dir + '/' + Dp1.FILE_NAME
+        ofile = os.path.normpath(home_dir + os.sep + Dp1.FILE_NAME)
         try:
             with open(ofile) as fh:
                 return Preferences(eval(fh.readline()))
