@@ -1,6 +1,7 @@
 # Author: Soft9000.com
 # 2018/03/08: Class Created
 # 2021/02/18: Adding DAO / Dict I/O usages.
+# 2024/05/24: Pythonic.
 
 import os
 import sys
@@ -266,6 +267,7 @@ class SqliteCrud:
 
     def _inject_import(self):
         result = ''
+        result += self.level.print("# Table creation & open DAO.")
         result += self.level.print("try:")
         self.level.inc()
         result += self.level.print('# dao.open()')
@@ -276,7 +278,7 @@ class SqliteCrud:
         self.level.inc()
         result += self.level.print("line = fh.readline().strip()")
         self.level.dec()
-        result += self.level.print("while len(line) != 0:")
+        result += self.level.print("while line:")
         self.level.inc()
         result += self.level.print("if dao.insert(line.split(sep)) is False:")
         self.level.inc()
