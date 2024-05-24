@@ -77,15 +77,15 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 
 
-for line in tables:
-    zname = line["ObjectName"]
+for table in tables:
+    zname = table["ObjectName"]
     print("Table:", zname)
     order = OrderClass(
         db_name=output_file + ".sqlt3",
         class_name=zname,
         table_name=zname,
         file_name="./" + zname + ".py")
-    zfields = line["Fields"]
+    zfields = table["Fields"]
     sql = SqliteCrud(order, zfields)
     data_file = str(zname + '.csv')
     result = sql.code_class_template(data_file)
