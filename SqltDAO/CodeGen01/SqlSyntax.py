@@ -2,6 +2,7 @@
 # 2018/03/08: Class Created
 # 2021/02/18: Adding DAO / Dict I/O usages.
 # 2024/05/24: Pythonic.
+# 2024/05/27: Also return a list or a representational dictionary.
 
 import os
 import sys
@@ -73,7 +74,7 @@ class SqliteCrud:
         result += self.level.print("def open(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen is False:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("self.conn = sqlite3.connect(self.db)")
         result += self.level.print("self.conn.row_factory = sqlite3.Row")
         result += self.level.print("self.curs = self.conn.cursor()")
@@ -86,7 +87,7 @@ class SqliteCrud:
         result += self.level.print("def close(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("self.conn.commit()")
         result += self.level.print("self.bOpen = False")
         self.level.dec()
@@ -97,7 +98,7 @@ class SqliteCrud:
         result += self.level.print("def count(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('res = self.curs.execute("SELECT count(*) FROM ' + self.order.table_name + ';")')
         result += self.level.print("return res.fetchone()[0]")
         self.level.dec()
@@ -108,7 +109,7 @@ class SqliteCrud:
         result += self.level.print("def drop_table(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute("DrOp TaBLe IF EXISTS ' + self.order.table_name + ';")')
         result += self.level.print("return True")
         self.level.dec()
@@ -119,7 +120,7 @@ class SqliteCrud:
         result += self.level.print("def create_table(self):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute("' + self.sql_create_table() + '")')
         result += self.level.print("return True")
         self.level.dec()
@@ -131,7 +132,7 @@ class SqliteCrud:
         self.level.inc()
         result += self.level.print("fields = " + self.order.class_name + ".get_fields(fields)")
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute("' + self.sql_insert_row() + '", fields)')
         result += self.level.print("return True")
         self.level.dec()
@@ -143,7 +144,7 @@ class SqliteCrud:
         self.level.inc()
         result += self.level.print("fields = " + self.order.class_name + ".get_fields(fields)")
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute("' + self.sql_update_row('id_', "fields"))
         result += self.level.print("return True")
         self.level.dec()
@@ -154,7 +155,7 @@ class SqliteCrud:
         result += self.level.print("def delete(self, primary_key):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute("DELETE from ' + self.order.table_name + ' WHERE ID = ?;", [primary_key])')
         result += self.level.print("return True")
         self.level.dec()
@@ -165,17 +166,17 @@ class SqliteCrud:
         result += self.level.print("def select(self, sql_select):")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute(sql_select)')
         result += self.level.print("zlist = self.curs.fetchall()")
         result += self.level.print("for ref in zlist:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("try:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("yield ref")
         self.level.dec()
         result += self.level.print("except:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("pass")
         self.level.dec()
         self.level.dec()
@@ -186,20 +187,48 @@ class SqliteCrud:
 
         self.level.push()
         result += self.level.print("''' New: Explicitly convert the SQLRow to a list. '''")
-        result += self.level.print("def select_list(self, sql_select):")
+        result += self.level.print("def select_list(self, sql_select)->list:")
         self.level.inc()
         result += self.level.print("if self.bOpen:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print('self.curs.execute(sql_select)')
         result += self.level.print("zlist = self.curs.fetchall()")
         result += self.level.print("for ref in zlist:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("try:")
-        self.level.inc();
+        self.level.inc()
         result += self.level.print("yield [*ref]")
         self.level.dec()
         result += self.level.print("except:")
-        self.level.inc();
+        self.level.inc()
+        result += self.level.print("pass")
+        self.level.dec()
+        self.level.dec()
+        result += self.level.print("return None")
+        result += self.level.print("")
+        self.level.pop()
+
+        self.level.push()
+        result += self.level.print("''' New: Explicitly convert the SQLRow to our fields. '''")
+        result += self.level.print("def select_dict(self, sql_select)->dict:")
+        self.level.inc()
+        result += self.level.print("if self.bOpen:")
+        self.level.inc()
+        result += self.level.print('self.curs.execute(sql_select)')
+        result += self.level.print("zlist = self.curs.fetchall()")
+        result += self.level.print("for ref in zlist:")
+        self.level.inc()
+        result += self.level.print("try:")
+        self.level.inc()
+        result += self.level.print("result = OrderedDict(self.fields)")
+        result += self.level.print("for ss, tag in enumerate(result):")
+        self.level.inc()
+        result += self.level.print("result[tag] = ref[ss]")
+        self.level.dec()
+        result += self.level.print("yield result")
+        self.level.dec()
+        result += self.level.print("except:")
+        self.level.inc()
         result += self.level.print("pass")
         self.level.dec()
         self.level.dec()

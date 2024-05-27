@@ -4,3 +4,7 @@
 2023/06/03: 09.27.29 (LOCAL)	Rev 1.2.1
 2023/08/15: 12.29.15 (LOCAL)	Rev 1.2.2: Start on import + os pathing
 2023/08/15: 14.21.34 (LOCAL)	Rev 1.2.4 - Official.
+2024/05/27: 08.38.53 (LOCAL)	Rev 1.2.5 - select_list.
+2024/05/27: 09.03.35 (LOCAL)	Released Rev 1.2.5 to PyPi.
+2024/05/27: 08.38.53 (LOCAL)	Rev 1.2.6 - select_dict.
+2024/05/27: 09.03.35 (LOCAL)	Released Rev 1.2.6 to PyPi.
