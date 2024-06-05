@@ -33,9 +33,15 @@ class Norm:
         if ord(name[0]) == 65279:
             name = eval(name[1:])
         name = str(name).strip()
-        for bad in (' ', '\\', '/', ':', ';'):
-            name = name.replace(bad, '_')
-        return name
+        if name[0].isnumeric():
+            name = 'z' + name
+        result = ''
+        for ss in range(len(name)):
+            if name[ss].isalnum():
+                result += name[ss]
+            elif name[ss] == '_':
+                result += name[ss]
+        return result.rstrip('_')
 
     @staticmethod
     def NormCols(fields):
