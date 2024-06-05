@@ -12,7 +12,7 @@ from SqltDAO.CodeGen01.DaoExceptions import GenOrderError
 
 class Meta:
     PRODUCT = "PyDAO 9000"
-    VERSION = '1.3.0'
+    VERSION = '1.4.1'
     
     @staticmethod
     def Title():
