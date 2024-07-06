@@ -25,8 +25,6 @@ or simply:
 
 >>> import SqltDAO.MainGUI
 
-(4) Finally, enjoy the video!
-    YouTube: https://youtu.be/azCokv4iI8k
 
 API Example:
 ===========
