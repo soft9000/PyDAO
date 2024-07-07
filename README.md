@@ -89,5 +89,10 @@ Need some practice? Then try to ...
 
 ![KP3008](https://github.com/Python3-Training/PyQuest/blob/main/CardGame/QuestProjects/KP3008-C-R-U-D-Accounting.png)
 
+WORKS IN PROGRESS
+------------
+[WIP] GenTUI: Rapidly create a textual / console data CRUD application.
+[WIP] GenGUI: Rapidly create a graphical / GUI CRUD application.
+
 ## zSupport?
 If you want to support the effort, I seek no donations. Instead, simply feel free to purchase one of [my educational](https://www.udemy.com/user/randallnagy2/) or [printed](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN?ref=sr_ntt_srch_lnk_1&qid=1660050704&sr=8-1) productions?
