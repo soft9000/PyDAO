@@ -20,11 +20,11 @@ from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.SchemaDef.Factory import Factory1
 
-from SqltDAO.Gui.Data2Code import Data2Code
-from SqltDAO.Gui.StandardEntry import LabelEntry
-from SqltDAO.Gui.TableDef import TableDef as TableDef2
+from SqltDAO.GenGui.Data2Code import Data2Code
+from SqltDAO.GenGui.StandardEntry import LabelEntry
+from SqltDAO.GenGui.TableDef import TableDef as TableDef2
 from SqltDAO.SchemaDef.Table import TableDef as TableDef1
-from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
+from SqltDAO.GenGui.DataPreferences import Dp1 as DataPreferences
 
 class Main(Tk):
 

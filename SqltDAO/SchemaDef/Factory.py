@@ -68,7 +68,7 @@ class Factory1:
 
     @staticmethod
     def Extract(order_def, pref):
-        from SqltDAO.Gui.DataPreferences import Preferences
+        from SqltDAO.GenGui.DataPreferences import Preferences
         ''' Extract an OrderClass from an OrderDef. Raise an exception on error.'''
         if isinstance(order_def, OrderDef) is False:
             raise TypeError("Error: Instance of OrderClass is required.")
@@ -128,7 +128,7 @@ class Factory1:
         ''' Will always STORE an instance into a project_name, if accessable.
         True / False returned.
         '''
-        from SqltDAO.Gui.DataPreferences import Preferences
+        from SqltDAO.GenGui.DataPreferences import Preferences
         if not isinstance(order_def, OrderDef):
             return False
         if isinstance(pref, Preferences) is False:
@@ -191,7 +191,7 @@ if __name__ == "__main__":
             detect = Factory1.Detect(file)
             print(detect.__dict__)
     else:
-        from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
+        from SqltDAO.GenGui.DataPreferences import Dp1 as DataPreferences
         pref = DataPreferences.Load('.')
         zorder = OrderDef(name=OrderDef.DEFAULT_SCHEMA)
         zname = zorder.project_name

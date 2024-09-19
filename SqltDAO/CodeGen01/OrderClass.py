@@ -6,7 +6,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 from collections import OrderedDict
-from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences, Preferences
+from SqltDAO.GenGui.DataPreferences import Dp1 as DataPreferences, Preferences
 from SqltDAO.CodeGen01.Normalizers import Norm
 
 class OrderClass:

@@ -5,7 +5,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.CodeGen01.CodeGen import DaoGen
-from SqltDAO.Gui.DataPreferences import Dp1 as DataPreferences
+from SqltDAO.GenGui.DataPreferences import Dp1 as DataPreferences
 
 if __name__ == "__main__":
     data_file = "../DaoTest01/nasdaqlisted.txt"
