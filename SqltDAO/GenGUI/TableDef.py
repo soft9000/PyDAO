@@ -13,7 +13,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 from tkinter import *
 from tkinter import messagebox
 
-from SqltDAO.Gui.StandardEntry import LabelEntry
+from SqltDAO.GenGui.StandardEntry import LabelEntry
 from SqltDAO.SchemaDef.Table import TableDef as TableDef1
 
 from collections import OrderedDict
