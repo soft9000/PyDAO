@@ -19,7 +19,7 @@ from SqltDAO.CodeGen01.OrderClass import OrderClass
 from SqltDAO.SchemaDef.OrderDef import OrderDef1 as OrderDef
 from SqltDAO.CodeGen01.SqlSyntax import SqliteCrud
 from SqltDAO.CodeGen01.CodeGen import DaoGen
-from SqltDAO.GenGui.DataPreferences import Dp1 as DataPreferences
+from SqltDAO.GenGUI.DataPreferences import Dp1 as DataPreferences
 
 from collections import OrderedDict
 

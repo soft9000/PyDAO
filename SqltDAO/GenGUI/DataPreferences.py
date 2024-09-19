@@ -17,7 +17,7 @@ from tkinter import simpledialog
 
 from collections import OrderedDict
 
-from SqltDAO.GenGui.StandardEntry import LabelEntryAction
+from SqltDAO.GenGUI.StandardEntry import LabelEntryAction
 
 class Preferences:
     ''' Opportunity to create an official class to manage those
