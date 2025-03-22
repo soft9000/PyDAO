@@ -3,6 +3,7 @@
 # 2021/02/18: Adding DAO / Dict I/O usages.
 # 2024/05/24: Pythonic.
 # 2024/05/27: Also return a list or a representational dictionary.
+# 2025/03/22: Expanded list conversion for get_fields().
 
 import os
 import sys
@@ -57,10 +58,9 @@ class SqliteCrud:
         result += self.level.print("@classmethod")
         result += self.level.print("def get_fields(cls, value):")
         self.level.inc()
-        result += self.level.print("if isinstance(value, dict) and 'ID' in value.keys():")
+        result += self.level.print("if isinstance(value, dict):")
         self.level.inc()
-        result += self.level.print("value = OrderedDict(value)")
-        result += self.level.print("del value['ID']")
+        result += self.level.print("if 'ID' in value.keys(): del value['ID']")
         result += self.level.print("return list(value.values())")
         self.level.dec()
         result += self.level.print("if isinstance(value, cls):")
