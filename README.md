@@ -73,12 +73,13 @@ VIDEO TRAINING
 --------------
 If you need to learn Python 3, then consider:
 
-https://www.udemy.com/python-1000
+[Python 1000: The Python Primer](https://www.udemy.com/course/python-1000-the-python-primer/?referralCode=A22C48BD99DBF167A3DE)
 
-https://www.udemy.com/python-2000-beyond-the-basics
+[Python Jump-Start](https://www.udemy.com/course/python-programming-seminar/?referralCode=73F810DC94CCEAC55B18)
 
-https://www.udemy.com/python-2100-objects-factories-frameworks
+[Python 2000: Beyond The Basics](https://www.udemy.com/course/python-2000-beyond-the-basics/?referralCode=9620CB60C96D96CA346E)
 
+[Python 2200: Mastering Object Orientation]([https://www.udemy.com/python-2100-objects-factories-frameworks](https://www.udemy.com/course/python_abc/?referralCode=A8E7E799DC7E500051F6)
 
 As well as our "Python 3000 SQL Quick Start:" https://www.udemy.com/python-3000-tactical-sql-quick-start
 
@@ -96,4 +97,6 @@ WORKS IN PROGRESS
 [WIP] GenGUI: Rapidly create a graphical / GUI CRUD application.
 
 ## zSupport?
+Mentoring is [available on  KO-FI](https://ko-fi.com/randallnagy).
+
 If you want to support the effort, I seek no donations. Instead, simply feel free to purchase one of [my educational](https://www.udemy.com/user/randallnagy2/) or [printed](https://www.amazon.com/Randall-Nagy/e/B08ZJLH1VN?ref=sr_ntt_srch_lnk_1&qid=1660050704&sr=8-1) productions?
